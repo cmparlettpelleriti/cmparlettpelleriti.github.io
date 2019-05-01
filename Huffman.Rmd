@@ -115,7 +115,7 @@ Now our codes are looking different. The codes are also different lengths. B is 
 
 Previously, our code had an average of 2 bits per letter. We got that using this formula:
 
-$$\frac{1}{K}\sum\limits_{k = 1}^K p(k) log_2(k)$$
+$$\sum\limits_{k = 1}^K p(k) log_2(k)$$
 
 Where $log_2(k)$ is the number of bits needed to code each letter. 
 
