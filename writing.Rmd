@@ -4,3 +4,10 @@ author: "Chelsea Parlett"
 output: html_document
 ---
 I write stuff.
+
+## Computer Sciencey Stuff
+[Huffman Coding](Huffman.html)
+
+## Statsy Stuff
+
+## Silly Stuff
