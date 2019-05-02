@@ -10,7 +10,9 @@ I write stuff.
 <br/>
 [Block Truncating Coding](BTC.html)
 <br/>
-
+[Discrete Cosine Transform](DCT.html)
+<br/>
+<br/>
 ## Statsy Stuff
 
 ## Silly Stuff

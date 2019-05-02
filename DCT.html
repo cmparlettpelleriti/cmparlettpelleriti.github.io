@@ -12,7 +12,7 @@
 <meta name="author" content="Chelsea Parlett" />
 
 
-<title>Writing</title>
+<title>Discrete Cosine Transform</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -226,19 +226,41 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Writing</h1>
+<h1 class="title toc-ignore">Discrete Cosine Transform</h1>
 <h4 class="author"><em>Chelsea Parlett</em></h4>
 
 </div>
 
 
-<p>I write stuff.</p>
-<div id="computer-sciencey-stuff" class="section level2">
-<h2>Computer Sciencey Stuff</h2>
-<p><a href="Huffman.html">Huffman Coding</a> <br/> <a href="BTC.html">Block Truncating Coding</a> <br/> <a href="DCT.html">Discrete Cosine Transform</a> <br/> <br/> ## Statsy Stuff</p>
+<p>The Discrete Cosine Transform (DCT) relies on the idea that any 2D image can be represented by the sum of <em>at most</em> <span class="math inline">\(N^2\)</span> cosine waves. DCT takes an image from a traditional spatial representation and transforms it into the frequency domain.</p>
+<p>We use the formula</p>
+<p><span class="math display">\[\tilde{I}(u,v) = \frac{4C(u)C(v)}{N^2}\sum\limits_{ i = 0}^{N-1}\sum\limits_{j = 0}^{N-1} I(i,j) cos(\frac{(2i + 1)u\pi}{2N})cos(\frac{(2j + 1)v\pi}{2N})\]</span></p>
+<p>where</p>
+<p><span class="math display">\[C(u) = \left\{
+                \begin{array}{ll}
+                  \frac{1}{\sqrt{2}}, u = 0 \\
+                 1, \text{ otherwise}
+                \end{array}
+              \right.\]</span></p>
+<p>To inverse this process we use a very similar formula</p>
+<p><span class="math display">\[I(i,j) = \sum\limits_{ u = 0}^{N-1}\sum\limits_{v = 0}^{N-1}C(u)C(v) cos(\frac{(2i + 1)u\pi}{2N})cos(\frac{(2j + 1)v\pi}{2N})\]</span></p>
+<div id="actual-compression" class="section level2">
+<h2>Actual Compression</h2>
+<p>So far, we’ve just changed our image from the spatial domain to the frequency domain. But doing this particular transformation allows us a very principled way of getting rid of high frequencies that humans won’t notice anyway. When you plot the frequencies as a matrix, the higher, more important frequencies will often be in the top left corner of the matrix. If we keep only the most important frequencies (the exact cutoff is up to you), we can greatly reduce the amount of information we need to store or send an image.</p>
+<br/>
+<center>
+<img src="images/BTC/Cat.jpg" style="width:50%; border:10px solid" align="center">
+</center>
+<br/> <br/>
+<center>
+<img src="images/BTC/dct.jpg" style="width:50%; border:10px solid" align="center">
+</center>
+<p><br/></p>
+<p>When we recreate the image using only the frequencies we kept we will lose some information (it’s lossy), but because of the way we chose which frequencies to keep, it should be mostly information thats unnoticible in most contexts.</p>
 </div>
-<div id="silly-stuff" class="section level2">
-<h2>Silly Stuff</h2>
+<div id="conclusion" class="section level2">
+<h2>Conclusion</h2>
+<p>DCT is great, it was used in jpegs and I don’t have much more to say about it at the moment.</p>
 </div>
 
 
