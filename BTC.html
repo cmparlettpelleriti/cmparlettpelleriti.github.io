@@ -12,7 +12,7 @@
 <meta name="author" content="Chelsea Parlett" />
 
 
-<title>Block Truncating Coding</title>
+<title>Block Truncation Coding</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -226,13 +226,13 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Block Truncating Coding</h1>
+<h1 class="title toc-ignore">Block Truncation Coding</h1>
 <h4 class="author"><em>Chelsea Parlett</em></h4>
 
 </div>
 
 
-<p>Block Transcription Coding (BTC) is a lossy compression algorithm. Unlike <a href="Huffman.html">Huffman Coding</a>, BTC loses a little bit of information when you apply it. But when compressing things like images, the loss is often either not noticeable, or at least doesn’t interfere with the interpretation of the image. If the original image was of a European Swallow, we can tell the reconstructed image is a European Swallow and not say, an African Swallow. BTC relies on the idea that if two distributions have the same parameters, they’re most likely similar. Or…similar enough.</p>
+<p>Block Truncation Coding (BTC) is a lossy compression algorithm. Unlike <a href="Huffman.html">Huffman Coding</a>, BTC loses a little bit of information when you apply it. But when compressing things like images, the loss is often either not noticeable, or at least doesn’t interfere with the interpretation of the image. If the original image was of a European Swallow, we can tell the reconstructed image is a European Swallow and not say, an African Swallow. BTC relies on the idea that if two distributions have the same parameters, they’re most likely similar. Or…similar enough.</p>
 <p>A 4x4 pixel image that has 8 bits (0-255) per pixel will need to send 128 bits of information to send over that image. But we can improve on that if we’re willing to sacrifice a little.</p>
 You can see here a picture of a cat on the left and the BTC compressed version on the right. <br/> <br/>
 <center>
