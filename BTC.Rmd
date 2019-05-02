@@ -1,10 +1,10 @@
 ---
-title: "Block Truncating Coding"
+title: "Block Truncation Coding"
 author: "Chelsea Parlett"
 output: html_document
 ---
 
-Block Transcription Coding (BTC) is a lossy compression algorithm. Unlike [Huffman Coding](Huffman.html), BTC loses a little bit of information when you apply it. But when compressing things like images, the loss is often either not noticeable, or at least doesn't interfere with the interpretation of the image. If the original image was of a European Swallow, we can tell the reconstructed image is a European Swallow and not say, an African Swallow. BTC relies on the idea that if two distributions have the same parameters, they're most likely similar. Or...similar enough.
+Block Truncation Coding (BTC) is a lossy compression algorithm. Unlike [Huffman Coding](Huffman.html), BTC loses a little bit of information when you apply it. But when compressing things like images, the loss is often either not noticeable, or at least doesn't interfere with the interpretation of the image. If the original image was of a European Swallow, we can tell the reconstructed image is a European Swallow and not say, an African Swallow. BTC relies on the idea that if two distributions have the same parameters, they're most likely similar. Or...similar enough.
 
 
 A 4x4 pixel image that has 8 bits (0-255) per pixel will need to send 128 bits of information to send over that image. But we can improve on that if we're willing to sacrifice a little.

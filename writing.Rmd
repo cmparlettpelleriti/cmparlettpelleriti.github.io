@@ -7,7 +7,9 @@ I write stuff.
 
 ## Computer Sciencey Stuff
 [Huffman Coding](Huffman.html)
+<br/>
 [Block Truncating Coding](BTC.html)
+<br/>
 
 ## Statsy Stuff
 
