@@ -13,6 +13,7 @@ I write stuff.
 [Discrete Cosine Transform](DCT.html)
 <br/>
 <br/>
+
 ## Statsy Stuff
 
 ## Silly Stuff
