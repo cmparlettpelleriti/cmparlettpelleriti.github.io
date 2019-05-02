@@ -232,24 +232,108 @@ $(document).ready(function () {
 </div>
 
 
-<div id="r-markdown" class="section level2">
-<h2>R Markdown</h2>
-<p>This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a>.</p>
-<p>When you click the <strong>Knit</strong> button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:</p>
-<pre class="r"><code>summary(cars)</code></pre>
-<pre><code>##      speed           dist       
-##  Min.   : 4.0   Min.   :  2.00  
-##  1st Qu.:12.0   1st Qu.: 26.00  
-##  Median :15.0   Median : 36.00  
-##  Mean   :15.4   Mean   : 42.98  
-##  3rd Qu.:19.0   3rd Qu.: 56.00  
-##  Max.   :25.0   Max.   :120.00</code></pre>
+<p>Block Transcription Coding (BTC) is a lossy compression algorithm. Unlike <a href="Huffman.html">Huffman Coding</a>, BTC loses a little bit of information when you apply it. But when compressing things like images, the loss is often either not noticeable, or at least doesn’t interfere with the interpretation of the image. If the original image was of a European Swallow, we can tell the reconstructed image is a European Swallow and not say, an African Swallow. BTC relies on the idea that if two distributions have the same parameters, they’re most likely similar. Or…similar enough.</p>
+<p>A 4x4 pixel image that has 8 bits (0-255) per pixel will need to send 128 bits of information to send over that image. But we can improve on that if we’re willing to sacrifice a little.</p>
+You can see here a picture of a cat on the left and the BTC compressed version on the right. <br/> <br/>
+<center>
+<img src="images/BTC/catcat.png" style="width:90%; border:10px solid" align="center">
+</center>
+<p><br/></p>
+<div id="encoding-a-block" class="section level2">
+<h2>Encoding a Block</h2>
+<p>To use BTC, first we split our image into 4x4 blocks. Then, we encode each 16 pixel block individually. Each block is pretty small compared to the 512x512 image. First, we calculate the mean and the standard deviation of the pixel values (for this example, we’ll use a grayscale image).</p>
+<p><span class="math display">\[ \bar{I} = \frac{1}{16}\sum\limits_{i = 0}^{15} I(i)\]</span> <span class="math display">\[\bar{\sigma} = \sqrt{\frac{1}{16}\sum\limits_{i = 0}^{15}(I(i) - \bar{I})^2}\]</span> We then decide how <em>precisely</em> we want to send our mean and standard deviation. Usually 8 bits for each will do the trick, but we can even use as few as 6 or 4. So far, we have 8 + 8 = 16 bits of information for this image.</p>
+<p>Next, we also send over a binary 4x4 block with 1’s if the original pixel is greater than or equal to the mean, and a 0 if it was less than the mean.</p>
+<p><span class="math display">\[b(i)=\left\{
+                \begin{array}{ll}
+                  1; \text{    if I(i)} \geq \bar{I}\\
+                  0; \text{    otherwise.}
+                \end{array}
+              \right.\]</span></p>
+<p>We need 16 bits (1 for each pixel in the image) to transmit this binary block, so now we’re up to 32 bits to send out this image. Compared to 128 bits to send the original image, that’s nothing to sneeze at.</p>
+<br/>
+<center>
+<img src="images/BTC/block1.png" style="width:50%; border:10px solid" align="center">
+</center>
+<p><br/></p>
+<p>For example, to encode this grayscale block, we would send the mean (~150) the standard deviation (~74), and the binary matrix that tells us whether each pixel is higher or lower than the mean.</p>
 </div>
-<div id="including-plots" class="section level2">
-<h2>Including Plots</h2>
-<p>You can also embed plots, for example:</p>
-<p><img src="BTC_files/figure-html/pressure-1.png" width="672" /></p>
-<p>Note that the <code>echo = FALSE</code> parameter was added to the code chunk to prevent printing of the R code that generated the plot.</p>
+<div id="decoding-a-block" class="section level2">
+<h2>Decoding a Block</h2>
+<p>Once we do this for each 4x4 block in the image and send it where it needs to go, the computer on the other end will need to <em>decompress</em> the image in order to view it.</p>
+<p>To do this, first we need to count up the number of 1’s and 0’s in that binary matrix we sent over. This gives us more information about the distribution of our original pixel values. For example, these two data sets have the same mean and (approximately) standard deviation. But if we know how many points are above and below the mean, we can easily tell them apart. Dataset a has 5 points above the mean, and dataset b has only 2. That tells us some information about how extreme the datapoints in a and b are. Since b only has 2 points above the mean but has the same standard deviation (approximately) as a, those two points are probably pretty big (and they are)!</p>
+<p><img src="BTC_files/figure-html/spriteLite2-1.png" width="672" /><img src="BTC_files/figure-html/spriteLite2-2.png" width="672" /> <br/> We will let Q be the number of 1’s in the binary matrix, and P be the number of 0’s. We’ll then create a new image block <strong>J</strong> where:</p>
+<p><span class="math display">\[J(i)=\left\{
+                \begin{array}{ll}
+                  \bar{I} + \frac{\bar{\sigma}}{\sqrt{\frac{Q}{P}}}; \text{ if b(i) = 1} \\
+                  \bar{I} - \bar{\sigma} * \sqrt{\frac{Q}{P}}; \text{    if b(i) = 0}
+                \end{array}
+              \right.\]</span> Using <span class="math inline">\(\bar{I} + \frac{\bar{\sigma}}{\sqrt{\frac{Q}{P}}}\)</span> and <span class="math inline">\(\bar{I} - \bar{\sigma} * \sqrt{\frac{Q}{P}}\)</span> forces the mean and standard deviation of our new block to be the same as our original one. So even though you can see that they’re not exactly the same, they at least share 3 important properties: mean, standard deviation, and location of high and low pixels.</p>
+<p>For the sample block we looked at in the last section (left), we can see the new encoded block (right).</p>
+<br/>
+<center>
+<img src="images/BTC/block.png" style="width:90%; border:10px solid" align="center">
+</center>
+<p><br/></p>
+</div>
+<div id="in-r" class="section level2">
+<h2>In R</h2>
+<p>If you want to do some quick (well, it does take a long time) BTC, here’s an approximate example in R using our adorable cat photo!</p>
+<pre class="r"><code>library(imager)
+#---functions---------------------------
+btcENCODE &lt;- function(im){
+  meanI &lt;- mean(im)
+  sdI &lt;- sd(im)
+  bin &lt;- im &gt; meanI
+  
+  return(list(mean = meanI, sd = sdI, bin = bin))
+}
+btcDECODE &lt;- function(m,s,bi){
+  Q &lt;- sum(bi)
+  P &lt;- 16 - Q
+  A &lt;- sqrt(Q/P)
+  a &lt;- m + s/A
+  b &lt;- m - s*A
+  decod &lt;- bi
+  decod[decod == 1] &lt;- a
+  decod[decod == 0] &lt;- b
+  return(decod)
+  
+}
+#---load--------------------------------
+
+cat &lt;- load.image(&quot;/images/BTC/cat.png&quot;)
+plot(cat, axes = F)
+
+#one Block example
+t &lt;- btcENCODE(catMat2[1:4,1:4])
+t2 &lt;- btcDECODE(round(t$mean),(round(t$sd), t$bin)
+
+#example transformation
+plot(as.cimg(catMat2[1:4,1:4]), axes = F)
+plot(as.cimg(t2), axes = F)
+
+#---whole Cat BTC------------------------
+catBTC &lt;- cat
+iter &lt;- seq(1,508,4)
+for (i in iter){
+  for (j in iter){
+    print(paste0(i,&quot;,&quot;,j))
+    en &lt;- btcENCODE(cat[i:i+4, j:j+4])
+    catBTC[i:i+4, j:j+4] &lt;- btcDECODE(en$mean, en$sd, en$bin)
+  }
+}
+
+plot(as.cimg(catBTC), axes = F)
+
+par(mfrow = c(1,2), mar = c(0,0,0,0))
+plot(as.cimg(cat), axes = F)
+plot(as.cimg(catBTC), axes = F)</code></pre>
+</div>
+<div id="conclusion" class="section level2">
+<h2>Conclusion</h2>
+<p>Depending on the number of bits you use to send the mean and standard deviation, BTC can save a LOT of space. And often, the image quality is not noticeably (or annoyingly) different. We sacrifice a little quality, but we gain a <em>LOT</em> of memory.</p>
+<p>Sorry, NOT SORRY for the loss.</p>
 </div>
 
 
