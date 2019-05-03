@@ -8,3 +8,5 @@ output: html_document
 plot(mtcars$mpg,mtcars$wt)
 ```
 I code stuff.
+
+[Bayesian Quiz 2](hidden/Quiz2.html)
