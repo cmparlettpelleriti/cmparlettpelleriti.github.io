@@ -15,5 +15,5 @@ I write stuff.
 <br/>
 
 ## Statsy Stuff
-
+[Accidental Chi-Square](AccidentialChiSq.html)
 ## Silly Stuff
