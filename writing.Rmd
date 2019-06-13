@@ -3,7 +3,7 @@ title: "Writing"
 author: "Chelsea Parlett"
 output: html_document
 ---
-I write stuff.
+I write stuff. Check out my [Medium](https://medium.com/@chelseaparlett) page for links to all my online writing!
 
 ## Computer Sciencey Stuff
 [Huffman Coding](Huffman.html)
@@ -22,9 +22,6 @@ I write stuff.
 <br/>
 
 ## Silly Stuff
-<br/>
-<img src="images/Posteriors.png" style="width:50%; border:10px solid; margin-right: 20px" align="left">
-<br/>
 [Everyone's a Little Bit Bayesian](https://medium.com/@chelseaparlett/everyones-a-little-bit-bayesian-f7f551cbe8af)
 <br/>
 [An Ode to Neural Networs and Their Layers](https://medium.com/@chelseaparlett/one-layer-two-layer-1a2c70e594)

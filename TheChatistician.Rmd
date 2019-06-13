@@ -9,7 +9,7 @@ output: html_document
 </br>
 
 # Who am I?
-The chatistician (that's me, **Chelsea**) is here to **chat** about all your casual consulting needs. I am a PhD Student (already have my M.S.!) in the Computational and Data Sciences. My [research](research.html) focuses on using Statistics and Machine Learning on Behavioral (read, Psychology) data. 
+The chatistician (that's me, **Chelsea**) is here to **chat** about all your casual consulting needs. I am a PhD Student (with an M.S.) in the Computational and Data Sciences. My [research](research.html) focuses on using Statistics and Machine Learning on Behavioral (read, Psychology) data. 
 
 The purpose of the chatistican is to help people who need a little stats help, but not a full on consulting statistician. Both my help, and my prices are casual. Since I started doing stats, I've had friends and family calling me and texting me, asking for **statistical guidence**. I love helping them. But recently I realized that not everyone has a statistician best friend...till now!
 
