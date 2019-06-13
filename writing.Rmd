@@ -15,5 +15,22 @@ I write stuff.
 <br/>
 
 ## Statsy Stuff
+[Crash Course Statistics](https://www.youtube.com/playlist?list=PL8dPuuaLjXtNM_Y-bUAhblSAdWRnmBUcr)
+<br/>
 [Accidental Chi-Square](AccidentialChiSq.html)
+<br/>
+<br/>
+
 ## Silly Stuff
+<br/>
+<img src="images/Posteriors.png" style="width:50%; border:10px solid; margin-right: 20px" align="left">
+<br/>
+[Everyone's a Little Bit Bayesian](https://medium.com/@chelseaparlett/everyones-a-little-bit-bayesian-f7f551cbe8af)
+<br/>
+[An Ode to Neural Networs and Their Layers](https://medium.com/@chelseaparlett/one-layer-two-layer-1a2c70e594)
+<br/>
+[A Limerick on p-values](https://medium.com/@chelseaparlett/a-limerick-on-p-values-46ac5208e073)
+<br/>
+[#StatsAsCats](https://twitter.com/search?q=%23StatsAsCAts&src=typd)
+<br/>
+<br/>

@@ -8,6 +8,12 @@ output:  html_document
 
 <img src="images/me.jpg" style="width:25%; border:10px solid; margin-right: 20px" align="left">
 
+**NOTE**: I am now open for [Casual Stats Consulting](TheChatistician.html). A solution for those who don't need a full on consulting statistician, but need a little bit of help.
+
+<center>
+**To hire me, email me at chatistician@gmail.com**
+</center>
+
 I am an avid lover of anything silly or statistical (especially if it's both at once). I am currently a PhD student at Chapman University here in Southern California where I not only do research, but also teach some Introductory courses in R and Python.
 
 My research is done with the Machine Learning and Assistive Technology Lab [(MLAT)](http://mlat.chapman.edu/), and focuses on applying statistical and Machine Learning techniques to Behavioral Data. See [here](https://www.linkedin.com/in/chelseaparlettpelleriti/) for some selected works.

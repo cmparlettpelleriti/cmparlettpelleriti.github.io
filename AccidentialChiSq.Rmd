@@ -1,9 +1,12 @@
 ---
 title: "Accidental ChiSq"
 author: "Chelsea Parlett"
-date: "5/9/2019"
 output: html_document
 ---
+
+<br/>
+<img src="images/ifailedyou.jpg" style="width:50%; border:10px solid; margin-right: 20px" align="left">
+<br/>
 
 One of my students ran a chi-square test with a continuous (but integer) outcome and categorical predictor. They emailed me worried about the warning "In chisq.test(t) : Chi-squared approximation may be incorrect". I told them they should run an ANOVA instead since their outcome was continuous (yes, there may be concerns because the data is integer/count data. A poisson model may have been better, but we didn't cover those in the class.) Their response to me was something along the lines of:
 
@@ -11,10 +14,7 @@ One of my students ran a chi-square test with a continuous (but integer) outcome
 
 Which made me feel like I failed them, since they didn't learn from me that it's not *whether* the code ran, but *whether* you used an appropriate test.
 
-</br>
-<img src="images/ifailedyou.jpg" style="width:50%; border:10px solid; margin-right: 20px" align="left">
-</br>
-So, to make up for it for future students. See this simulation that shows why running a chi-square test when you should have run an ANOVA is not a good idea.
+So, to make up for it for future students, I wrote this. See this simulation that shows why running a chi-square test when you should have run an ANOVA is not a good idea.
 
 # Null Case
 ## Simulation Function
@@ -59,6 +59,8 @@ head(ca)
 ```{r plotting}
 ggplot(ca,aes(x = chi, y = anov)) + geom_point() + geom_smooth(method = "lm")
 cor(ca)
+
+
 ```
 
 ```{r testing}
@@ -67,6 +69,16 @@ summary(chi_aov)
 
 ```
 
+## Density Plots of p-values
+```{r densityplots}
+#distribution of p-values density, makes sense that the p-values for anova are skewed because there's a clear effect.
+ggplot(ca,aes(x = chi)) + geom_density()
+ggplot(ca,aes(x = anov)) + geom_density()
+
+ggplot(ca) + geom_density(aes(x = chi)) + geom_density(aes(x = anov))
+```
+
+The density plot of the anova p-values is relatively flat, which is expected given a null effect. The density plot for the chi-square p-values is not flat, with a peak around 0.5.
 ## What did we learn?
 
 In our simulation, there is a small positive correlation between the p-values you get when you run an ANOVA and chi-square test on data that has a continuous but integer outcome, and a categorical predictor when the null is TRUE.
@@ -107,6 +119,7 @@ CHIANOVA2 <- function(ngroups = 5, pergroup = 12, plot = F){
 ```{r ex2, message = FALSE, warning= F}
 examp <- CHIANOVA2(plot = T)
 ```
+
 ## Running the Simulation
 ```{r runsim2, message = FALSE, warning = F}
 set.seed(123)
@@ -131,8 +144,17 @@ cor(ca)
 chi_aov <- lm(anov~chi, data = ca)
 summary(chi_aov)
 
-```
 
+#distribution of p-values density, makes sense that the p-values for anova are skewed because there's a clear effect.
+ggplot(ca,aes(x = chi)) + geom_density()
+ggplot(ca,aes(x = anov)) + geom_density()
+ggplot(ca) + geom_density(aes(x = chi)) + geom_density(aes(x = anov))
+```
+```{r densityplots2}
+#distribution of p-values density, makes sense that the p-values for anova are skewed because there's a clear effect.
+ggplot(ca,aes(x = chi)) + geom_density()
+ggplot(ca,aes(x = anov)) + geom_density()
+```
 ## What did we learn?
 
 Again, there is a small positive correlation between the p-values you get when you run an ANOVA and chi-square test on data that has a continuous but integer outcome, and a categorical predictor when the null is FALSE.

@@ -191,6 +191,9 @@ $(document).ready(function () {
 <li>
   <a href="research.html">Research</a>
 </li>
+<li>
+  <a href="TheChatistician.html">The Chatistician</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -228,17 +231,17 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Accidental ChiSq</h1>
 <h4 class="author"><em>Chelsea Parlett</em></h4>
-<h4 class="date"><em>5/9/2019</em></h4>
 
 </div>
 
 
+<p><br/> <img src="images/ifailedyou.jpg" style="width:50%; border:10px solid; margin-right: 20px" align="left"> <br/></p>
 <p>One of my students ran a chi-square test with a continuous (but integer) outcome and categorical predictor. They emailed me worried about the warning “In chisq.test(t) : Chi-squared approximation may be incorrect”. I told them they should run an ANOVA instead since their outcome was continuous (yes, there may be concerns because the data is integer/count data. A poisson model may have been better, but we didn’t cover those in the class.) Their response to me was something along the lines of:</p>
 <blockquote>
 <p>Oh don’t worry, the chi-square code still ran so it’s fine.</p>
 </blockquote>
 <p>Which made me feel like I failed them, since they didn’t learn from me that it’s not <em>whether</em> the code ran, but <em>whether</em> you used an appropriate test.</p>
-<p></br> <img src="images/ifailedyou.jpg" style="width:50%; border:10px solid; margin-right: 20px" align="left"> </br> So, to make up for it for future students. See this simulation that shows why running a chi-square test when you should have run an ANOVA is not a good idea.</p>
+<p>So, to make up for it for future students, I wrote this. See this simulation that shows why running a chi-square test when you should have run an ANOVA is not a good idea.</p>
 <div id="null-case" class="section level1">
 <h1>Null Case</h1>
 <div id="simulation-function" class="section level2">
@@ -312,8 +315,16 @@ summary(chi_aov)</code></pre>
 ## Multiple R-squared:  0.008658,   Adjusted R-squared:  0.007665 
 ## F-statistic: 8.716 on 1 and 998 DF,  p-value: 0.003227</code></pre>
 </div>
-<div id="what-did-we-learn" class="section level2">
-<h2>What did we learn?</h2>
+<div id="density-plots-of-p-values" class="section level2">
+<h2>Density Plots of p-values</h2>
+<pre class="r"><code>#distribution of p-values density, makes sense that the p-values for anova are skewed because there&#39;s a clear effect.
+ggplot(ca,aes(x = chi)) + geom_density()</code></pre>
+<p><img src="AccidentialChiSq_files/figure-html/densityplots-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(ca,aes(x = anov)) + geom_density()</code></pre>
+<p><img src="AccidentialChiSq_files/figure-html/densityplots-2.png" width="672" /></p>
+<pre class="r"><code>ggplot(ca) + geom_density(aes(x = chi)) + geom_density(aes(x = anov))</code></pre>
+<p><img src="AccidentialChiSq_files/figure-html/densityplots-3.png" width="672" /></p>
+<p>The density plot of the anova p-values is relatively flat, which is expected given a null effect. The density plot for the chi-square p-values is not flat, with a peak around 0.5. ## What did we learn?</p>
 <p>In our simulation, there is a small positive correlation between the p-values you get when you run an ANOVA and chi-square test on data that has a continuous but integer outcome, and a categorical predictor when the null is TRUE.</p>
 <p>However, the adjusted <span class="math inline">\(R^2\)</span> value is incredibly low at ~ 0.009, indicating that knowing the p-value of the chi-square test on the data does not explain much of the variation in the p-value of the ANOVA test on the same data.</p>
 <p>In layman’s terms, there’s not a strong relationship between the p-values you get with the two different tests. This makes sense since when you run a chi-square test, you treat your continuous/integer value as a categorical variable. Which is is not.</p>
@@ -350,7 +361,10 @@ summary(chi_aov)</code></pre>
 <div id="example-of-simulation-run-1" class="section level2">
 <h2>Example of Simulation Run</h2>
 <pre class="r"><code>examp &lt;- CHIANOVA2(plot = T)</code></pre>
-<p><img src="AccidentialChiSq_files/figure-html/ex2-1.png" width="672" /> ## Running the Simulation</p>
+<p><img src="AccidentialChiSq_files/figure-html/ex2-1.png" width="672" /></p>
+</div>
+<div id="running-the-simulation" class="section level2">
+<h2>Running the Simulation</h2>
 <pre class="r"><code>set.seed(123)
 n &lt;- 1000
 ca &lt;- data.frame(chi = 0, anov = 0)
@@ -397,9 +411,18 @@ summary(chi_aov)</code></pre>
 ## Residual standard error: 0.06304 on 998 degrees of freedom
 ## Multiple R-squared:  0.002489,   Adjusted R-squared:  0.00149 
 ## F-statistic:  2.49 on 1 and 998 DF,  p-value: 0.1149</code></pre>
-</div>
-<div id="what-did-we-learn-1" class="section level2">
-<h2>What did we learn?</h2>
+<pre class="r"><code>#distribution of p-values density, makes sense that the p-values for anova are skewed because there&#39;s a clear effect.
+ggplot(ca,aes(x = chi)) + geom_density()</code></pre>
+<p><img src="AccidentialChiSq_files/figure-html/testing2-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(ca,aes(x = anov)) + geom_density()</code></pre>
+<p><img src="AccidentialChiSq_files/figure-html/testing2-2.png" width="672" /></p>
+<pre class="r"><code>ggplot(ca) + geom_density(aes(x = chi)) + geom_density(aes(x = anov))</code></pre>
+<p><img src="AccidentialChiSq_files/figure-html/testing2-3.png" width="672" /></p>
+<pre class="r"><code>#distribution of p-values density, makes sense that the p-values for anova are skewed because there&#39;s a clear effect.
+ggplot(ca,aes(x = chi)) + geom_density()</code></pre>
+<p><img src="AccidentialChiSq_files/figure-html/densityplots2-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(ca,aes(x = anov)) + geom_density()</code></pre>
+<p><img src="AccidentialChiSq_files/figure-html/densityplots2-2.png" width="672" /> ## What did we learn?</p>
 <p>Again, there is a small positive correlation between the p-values you get when you run an ANOVA and chi-square test on data that has a continuous but integer outcome, and a categorical predictor when the null is FALSE.</p>
 <p>We get a small adjusted <span class="math inline">\(R^2\)</span> value here as well of ~ 0.002.</p>
 <p>From our simulation here, it looks like regardless of the relationship between our two variables, running a chi-square test and an ANOVA will give you virtually unrelated p-values.</p>
