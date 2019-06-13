@@ -9,11 +9,13 @@ output: html_document
 </br>
 
 # Who am I?
-The chatistician (that's me, **Chelsea**) is here to **chat** about all your casual consulting needs. I am a PhD Student (with an M.S.) in the Computational and Data Sciences. My [research](research.html) focuses on using Statistics and Machine Learning on Behavioral (read, Psychology) data. 
+Your research and data are important. You have put a lot of work, expertise, and time into getting the right data to answer your questions. And now, it's time to analyze. You can't be expected to master the entire field of stats AND your field. That's why you need me. The Chatistician.
 
-The purpose of the chatistican is to help people who need a little stats help, but not a full on consulting statistician. Both my help, and my prices are casual. Since I started doing stats, I've had friends and family calling me and texting me, asking for **statistical guidence**. I love helping them. But recently I realized that not everyone has a statistician best friend...till now!
+The Chatistician (that's me, **Chelsea**) is here to **chat** about all your casual consulting needs. I am a PhD Student (with an M.S.) in the Computational and Data Sciences. My [research](research.html) focuses on using Statistics and Machine Learning on Behavioral (read, Psychology) data. 
 
-The chatistician aims to **chat** with you and provide you with **statistical advice**, and a sounding board for all your statistical needs. *You should hire me if you do your own stats but need a sanity check to make sure you're doing things well* (after all, you can't be expected to master the entire field of stats AND your field). Need to make sure you're on the right track? Need someone to proof your methods section, or help you respond to Reviewer #2 with ease? Contact me! I'll even help you without face-to-face interaction, if you're having one of those days (check out the **Nano Chat**!)
+I want to help people who need a *little* stats help, but not a full on consulting statistician. Both my help, and my prices are casual. Since I started doing stats, I've had friends and family calling me and texting me, asking for **statistical guidence**. I love helping them. But recently I realized that not everyone has a statistician best friend...till now!
+
+The chatistician aims to **chat** with you and provide you with **statistical advice**, and a sounding board for all your statistical needs. *You should hire me if you do your own stats but need a sanity check to make sure you're doing things well*. Need to make sure you're on the right track? Need someone to proof your methods section, or help you respond to Reviewer #2 with ease? Contact me! I'll even help you without face-to-face interaction, if you're having one of those days (check out the **Nano Chat**!)
 
 </br>
 </br>
@@ -34,6 +36,7 @@ The chatistician aims to **chat** with you and provide you with **statistical ad
 - Frequentist Statistics
 - Bayesian Statistics
 - Machine Learning (Supervised AND Unsupervised)
+- Survey Design
 - Software I am great at: R, Python, JASP, JMP
 - Software I am okay at: SPSS, STATA
 
@@ -49,6 +52,8 @@ The chatistician aims to **chat** with you and provide you with **statistical ad
 **Special Introductory Prices!**
 </center>
 
+</br>
+
 - **Large Chat ($80):** 60 minute video/voice call consultation + 3 follow up emails.
 
 - **Medium Chat ($45):** 30 minute video/voice or voice call consultation + 2 follow up emails.
@@ -58,6 +63,8 @@ The chatistician aims to **chat** with you and provide you with **statistical ad
 - **Nano Chat ($20):** A purely text/email consultation. Up to 30 minutes of my time (only my time spent reading/responding counts!).
 
 - **Reviewer 2 Special ($50):** Need help prepping your methods section? Responding to Reviewer 2's COMPLETELY unfair criticism? I'll spend up to 30 minutes reviewing your paper, and 30 minutes on a video/voice call with you.
+
+</br>
 
 <center>
 **To hire me, email me at chatistician@gmail.com**
