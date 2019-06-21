@@ -9,13 +9,13 @@ output: html_document
 </br>
 
 # Who am I?
-Your research and data are important. You have put a lot of work, expertise, and time into getting the right data to answer your questions. And now, it's time to analyze. You can't be expected to master the entire field of stats AND your field. That's why you need me. The Chatistician.
+Your research and data are important. You have put a lot of work, expertise, and time into getting the right data to answer your questions. And now, it's time to analyze. You can't be expected to master the entire field of stats AND your field. You need *statistical coaching*. That's why you need me. The Chatistician.
 
 The Chatistician (that's me, **Chelsea**) is here to **chat** about all your casual consulting needs. I am a PhD Student (with an M.S.) in the Computational and Data Sciences. My [research](research.html) focuses on using Statistics and Machine Learning on Behavioral (read, Psychology) data. 
 
-I want to help people who need a *little* stats help, but not a full on consulting statistician. Both my help, and my prices are casual. Since I started doing stats, I've had friends and family calling me and texting me, asking for **statistical guidence**. I love helping them. But recently I realized that not everyone has a statistician best friend...till now!
+I want to help people who need a *little* stats help, but not a full on consulting statistician. Both my help, and my prices are casual. Since I started doing stats, I've had friends and family calling me and texting me, asking for **statistical guidance**. I love helping them. But recently I realized that not everyone has a statistician best friend...till now!
 
-The chatistician aims to **chat** with you and provide you with **statistical advice**, and a sounding board for all your statistical needs. *You should hire me if you do your own stats but need a sanity check to make sure you're doing things well*. Need to make sure you're on the right track? Need someone to proof your methods section, or help you respond to Reviewer #2 with ease? Contact me! I'll even help you without face-to-face interaction, if you're having one of those days (check out the **Nano Chat**!)
+The chatistician aims to **chat** with you and provide you with **statistical advice**, and a sounding board for all your statistical needs. *You should hire me if you do your own stats but need a sanity check or answers to make sure you're doing things well*. Need to make sure you're on the right track? Need someone to proof your methods section, or help you respond to Reviewer #2 with ease? Contact me! I'll even help you without face-to-face interaction, if you're having one of those days (check out the **Nano Chat**!)
 
 </br>
 </br>
