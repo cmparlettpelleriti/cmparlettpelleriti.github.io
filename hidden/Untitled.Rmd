@@ -11,19 +11,21 @@ library(lsmeans)
 
 #--create data--------------------------------
 set.seed(123)
-A <- rnorm(300, 10, 20)
+A <- rnorm(300, 9, 20)
 B <- rnorm(300, 12, 20)
-C <- rnorm(300, 14, 20)
+C <- rnorm(300, 15, 20)
 
 dat <- data.frame(Score = c(A,B,C),
-                  label = sort(rep(c("A","B","C"), 300)))
+                  label = sort(rep(c("A","B","C"), 300)),
+                  sex = sample(rep(c("M","F"), 500),
+                                  900, replace = T)) #sex added as extra variable
 
 ggplot(dat, aes(x = label, y = Score)) + geom_boxplot()
 ```
 
 ## A as reference
 ```{r A}
-m <- lm(Score~label, data = dat)
+m <- lm(Score~label * sex , data = dat)
 summary(m)
 
 ls <- lsmeans(m, pairwise ~ label)
@@ -33,7 +35,7 @@ ls
 ## B as reference
 ```{r B}
 dat$label <- relevel(dat$label, "B")
-m2 <- lm(Score~label, data = dat)
+m2 <- lm(Score~label * sex, data = dat)
 summary(m2)
 
 ls2 <- lsmeans(m2, pairwise ~ label)
@@ -44,9 +46,12 @@ ls2
 ## C as reference
 ```{r C}
 dat$label <- relevel(dat$label, "C")
-m3 <- lm(Score~label, data = dat)
+m3 <- lm(Score~label * sex, data = dat)
 summary(m3)
 
 ls3 <- lsmeans(m3, pairwise ~ label)
 ls3
 ```
+
+## Conclusions
+Based on this code, you can see that releveling and re-running the model will change the Coefficient Estimates, even the p-values. Notice that since only C and A are stat sig different, that when B is the reference, neither effects of label are significant, but if A or C is the reference the other is significant (A if C is the reference, C if A is the reference). But also note that none of this releveling changes the relationship between the groups, you can see this by looking at the effect of A when C is the reference, and the effect of C when A is the reference, they're inverses of each other!
