@@ -1,0 +1,52 @@
+---
+title: "lsmeansVsReleveling"
+author: "Chelsea Parlett"
+date: "7/2/2019"
+output: html_document
+---
+
+```{r create}
+library(ggplot2)
+library(lsmeans)
+
+#--create data--------------------------------
+set.seed(123)
+A <- rnorm(300, 10, 20)
+B <- rnorm(300, 12, 20)
+C <- rnorm(300, 14, 20)
+
+dat <- data.frame(Score = c(A,B,C),
+                  label = sort(rep(c("A","B","C"), 300)))
+
+ggplot(dat, aes(x = label, y = Score)) + geom_boxplot()
+```
+
+## A as reference
+```{r A}
+m <- lm(Score~label, data = dat)
+summary(m)
+
+ls <- lsmeans(m, pairwise ~ label)
+ls
+```
+
+## B as reference
+```{r B}
+dat$label <- relevel(dat$label, "B")
+m2 <- lm(Score~label, data = dat)
+summary(m2)
+
+ls2 <- lsmeans(m2, pairwise ~ label)
+ls2
+```
+
+
+## C as reference
+```{r C}
+dat$label <- relevel(dat$label, "C")
+m3 <- lm(Score~label, data = dat)
+summary(m3)
+
+ls3 <- lsmeans(m3, pairwise ~ label)
+ls3
+```
