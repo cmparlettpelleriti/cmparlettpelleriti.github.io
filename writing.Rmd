@@ -21,6 +21,8 @@ I write stuff. Check out my [Medium](https://medium.com/@chelseaparlett) page fo
 <br/>
 [Node-Based Resilience Clustering](NBRC.html)
 <br/>
+[Q Statistics](QStatistic.html)
+<br/>
 <br/>
 
 ## Silly Stuff
