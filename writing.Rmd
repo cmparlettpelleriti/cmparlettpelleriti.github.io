@@ -28,7 +28,7 @@ I write stuff. Check out my [Medium](https://medium.com/@chelseaparlett) page fo
 ## Silly Stuff
 [Everyone's a Little Bit Bayesian](https://medium.com/@chelseaparlett/everyones-a-little-bit-bayesian-f7f551cbe8af)
 <br/>
-[An Ode to Neural Networs and Their Layers](https://medium.com/@chelseaparlett/one-layer-two-layer-1a2c70e594)
+[An Ode to Neural Networks and Their Layers](https://medium.com/@chelseaparlett/one-layer-two-layer-1a2c70e594)
 <br/>
 [A Limerick on p-values](https://medium.com/@chelseaparlett/a-limerick-on-p-values-46ac5208e073)
 <br/>
