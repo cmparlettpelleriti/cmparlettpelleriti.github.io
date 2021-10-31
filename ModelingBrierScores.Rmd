@@ -1,0 +1,10 @@
+---
+title: "Modeling Brier Scores: A Beta Solution"
+author: "Chelsea Parlett"
+output: html_document
+---
+- [Slides for Talk]()
+- [Stan Code for MetaMemory ZOIB]()
+- [Stan Forum Post Leading to Multi-Inflated Beta Regression]()
+- [Ordered Beta Regression](https://osf.io/preprints/socarxiv/2sx6y/)
+- [A Better Lemon Squeezer](https://pubmed.ncbi.nlm.nih.gov/16594767/)
