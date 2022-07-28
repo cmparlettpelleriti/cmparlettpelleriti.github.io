@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 <meta name="author" content="Chelsea Parlett" />
@@ -14,23 +14,38 @@
 
 <title>Coding</title>
 
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
 <script type="text/javascript">
 if (window.hljs) {
   hljs.configure({languages: []});
@@ -43,37 +58,11 @@ if (window.hljs) {
 
 
 
-<style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
-</style>
 
 
-</head>
 
-<body>
+
+
 
 <style type = "text/css">
 .main-container {
@@ -81,58 +70,71 @@ h6 {
   margin-left: auto;
   margin-right: auto;
 }
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
-}
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
 }
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 51px;
-  padding-bottom: 40px;
+.dropdown-submenu {
+  position: relative;
 }
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
 }
-
-.section h2 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
 }
-.section h3 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
 }
-.section h4 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
 }
-.section h5 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu.pull-left {
+  float: none;
 }
-.section h6 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -143,26 +145,93 @@ $(document).ready(function () {
   var menuAnchor = $('a[href="' + href + '"]');
 
   // mark it active
-  menuAnchor.parent().addClass('active');
+  menuAnchor.tab('show');
 
   // if it's got a parent navbar menu mark it active as well
   menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
-
-
-<div class="container-fluid main-container">
 
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
 
 
 
@@ -170,7 +239,7 @@ $(document).ready(function () {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -225,19 +294,22 @@ $(document).ready(function () {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
 
 
 <h1 class="title toc-ignore">Coding</h1>
-<h4 class="author"><em>Chelsea Parlett</em></h4>
+<h4 class="author">Chelsea Parlett</h4>
 
 </div>
 
 
-<pre class="r"><code>plot(mtcars$mpg,mtcars$wt)</code></pre>
-<p><img src="coding_files/figure-html/unnamed-chunk-1-1.png" width="672" /> I code stuff.</p>
-<p><a href="hidden/Quiz2.html">Bayesian Quiz 2</a></p>
+<div id="shiny-for-python-apps" class="section level1">
+<h1>Shiny for Python Apps</h1>
+<p><a
+href="https://shinylive.io/py/editor/#code=NobwRAdghgtgpmAXGKAHVA6VBPMAaMAYwHsIAXOcpMAMwCdiYACAZwAsBLCbJjmVYnTJMAgujxM6lACZw6EgK4cJUqITIcAbnAA6Eeo1YBHJdJZ9e-QcIBGdDtIDmcAPqEGLFnIl2Hzl46wcBLmMC6+Tq6B8Hp6AMRMAJJWQkwwxNIKADZwLEw0gkyoWcTCUhCy9hCOenwCqRAK-DxQeRCotSnCqFAVrUz9qNKd9cIwUGTFpVkcNljYU8KDWWQj1qxwUDaCEAN5LBAssdDoLkpMALxMSlhQ-jRZpgAUekxv1xwYbACML2AAyiYHEwAOJBJgAIXskSYAGEPOZqkx-nxshMOKQdGAAJR4V7vG6oP6JXZkNhwVhsYgAd2RQOkoKCEgAClkoNg5HkoFJ8oJCHAGWRiEU2S0mNEKdTyTyyXAeNSoFkANZMHRq3bvTUDdzETwDJgRZxpKCya6oJjEGisBxwAC0NmwtvMpp6EFyFqtjjZngwomEm0IbFYFFQElIFNdFLV+K1b0t4u9eQ4eVUWQGFSY1I4WTTLAU6HWspF7LkAHI8tS4BxHGwyBIi6VpZns2m7JslRJCFAFIjHKr1bH3rLmEKRU14MJR7KOHQmLIJmxfQAJGlwbTyC0Qfn6yMG1RKlghBQ2LwmSjdUWc5s5phKiA0zOcQP9mOx3fxr2tJN5IssKA0ClwwGSc2AmYM4HNJ5+g4MhyyYBsICyHggPvWwGCVShsV9AAVYVxgwl8NUHGDtQRVh-zgJCJCgYsOVnGAe2EUgkPA81SCYcsKNLIpendD9E3g8lH2IHJM3ZDAsVxV8biXbCAFkABk-gAHlQAA+bChOUmw1IAOSaGw5A9JhWRLOgWGUgB6HTWBmSomBIcgGCyH8hMaGBDNneNUDgYhigjUUuD7IsJV9aMiMHN5NIpbS1KYfSPKM+NmV4vJ4xBRMrJslg7KMxyyGcvIqVpEokSLQ0KWTMKB0i95oqYUrnFncroWceshPSHlIzyYozLyBiWGEHU9SefCgt4MZBApaReia4geywqz1MkvEIpuLhUAUMgXBym06D+CAXF6uijnwVUwASzzjNMk6sQkb4JAAZgABnugA2KS1s+Datp23L9qxQ7uru87LqSq0UrdNKrQyr8QYepgXvugAOT7NXW9pfrUDRSHCLahQgP46AUCAQaxAAlEnkVRNkcdJnFVvRz5pC0J5BuwHILixclq1rRBvme1AAA8Vukz55smX6KCFsgifRYhRa+jAJc27bFj+RZFexY49FkK0vDodcnh+usLS21WQlycxSGxRBjk1AABVR1C0OAMAAURoAD1FfJ2Aw0bQMDXc9jcxsgMGJiBtYivWmBcJ5bdfR2Va2pP3j9io5AwaXVgizVY7oeWE7tvPBykMgFDoXYaCxerC5x67Uvg4UbqvZNECYEB2gj+aKlD1WMCB1KE8sk3B6Oy9zITvAACZsQAXyxNPY2XpgHZT3PIozyosBKWXFTILmwBEJhOEG4hHELmBJNX2P1cT0vYzIYQrixZkGBsLZsxg5CrX+SvNBaEVEwAA6uSXYrdzKXHOkwAA1MGfaY8gaTxYAnbEcCYG9AZJDd0r8wAYMGogsO49upoNXpqPMhsgFZBcPXXB1owgVQCEEJ4yC+rQKQRPPq08mBDyhhw4hfDchkMflqShgDNCKhcNIK0VwhgYAACITCgAAMSvnAJ4IA366hghiemHdxHUNoRMXIGAMLYFQWjWq1ibGRSxP-KhkisjkxMViAxACjF0JYBgJxChhEL2jrYmg1ZqJC2gcUcOeYbCLEseQ945orgHG8Z-Og6swl4OZDoumIMeB4IcRIxULiKB3TibY2MbA-HQO0eYbJZ0oDpIGELCQM0yA0USR4px0iaCMzKWU6QGQjRXBUYqLwgSbERIwDkZwfdgAAF08BzIkPQIIpALjDJcnAMZ1jMBeFlhoMgokrjPx6b0pgQs2SGTTBkyeJksl6JKaI2qHMtiUSqQCDpwD37EE-jYb+ZBsA30ee8Upkg4AVyrvkasOsTgJNEOgKCpwlCW0Nt4OccAbAKEcBcbCxNNl6DAPPPA4BoDwGoCwekoR5j4CIKQCgVBkAJBAfYCggkKQFBzDScaj18gkxdqQFgJc4i2mFSK0VYrxUSrFfEJg3xfRMOGgbHhUoODPlaRhJMuwaIzEGj4VqwRjLPTglgmV5ZpVkjAlIVAUgvDkArE+IMTxnq2ganAGgptvjOvsDWMg6DdzJlBcAz8nhpXGt6I2Iy2rTZ3hpIdQaEFDyPhVUGfKUAuBcgasmJi+sQxHAgAkY2VpejYHQeapYPJo3UlJMKQy5EAISTzaynlW46aUnmlkBkwTzKTigARX8FFWJ5ALemYtvBdgVtjTm1aCRZQQCWYUItoLxhcHGnG1ACbsDzVbdkBkhcKiMBYoGYguoKQ5DdRaWcXraxTocuSQgKoOBWlLaxXg+wKLUQzFIEgdAGTKufKuxtx0jJCmIEqM1QkaC8pbewNtO6wWV01RmwaDlaWpogONb4Ja3IGXBrWikq6fw9soEwKCuwuA+pDRmOe+pI3GXw-BQjpM83xGlTPOVermHwCVfa+j6rR28PahSdyV1vIoOlcdcaLU-AUglO+hkQiE2-qDP6osQm5DSu8k3GigH6KMVwwesio58KVSYltAYMxA7SvqhB5teit3tsFUwZ10y5AmP1Lu-pzAaPxkNVyDM3w4LxhyNUMkvCjqpWlYp0FVrcjnjtUmnibpjJBu-Lh4jTqXVuvup63m5GG3OpnYoXse4pNuARKiki0Ht0MLRCymiFUHIIiCtKgos4AxBnjLsbT3jRBuqMm12iqKN0KDswyfMLSKSymlV5q047Ut0aeG7RwvoH0DdnN8cUxB3SntNttlQOX0yCnAfkRULlr2VlvPeWkT6iydqQ9yv8AEB0DB5LtjLO3XWm2NdppgM8RvBm5LnBIWYQu-hzW9iQr3tsYGjgkZ1Q2-sjOFBhCC1HM3GWKsabgT3+vffGKaB7lEAUNoWxgJbTBgAPQACx4AAKx4AAOx4AFhgFnsz0HGvLvBia9a4jMYbY9X0oRwjsYlAnRNqrCMatC11gTvDsNeStF13krW1BsGlTJ6XqVZeqYVwlvinoBJaZuQNYQBP9O6h-HhQj0qSISzM67WToWJQJpU-LpLQRLfVdpm7MDbLIO2cq+2r3rnDoSnFB764RWmGi9xAd6VnOIU0RZny6AdBf6NsMU4ooH8v4zH+crpgOO7nsRJ0t5rhRvuvQAzn35ef0-OGfuNNQZF-XPQwM9DvCMWurZlRIX32fvm55-klsFGgkTN4ty+pgbfnqsZZ1hGHjnJXL5X6vtf6-l9rFSO5xgxxY7yrK-tCqEhx07RzQ-V8p-8MuF2FcILTwr-n9VBFAnZ-43QMf-Gm-r46NXE-2u+2d4bvP1XYCqYAf-FgG-RAWZEuSKQ9FVCkK4HfGADAeA-kJ4YAUsOgUsPAUsLIUsNnVeFbNAxAvBOgLEA7PXS4K4b4WAmxV-OjWBGgkFfDDANAHyPuLA0sLZLUSiYgqkBA6g86LICgr7XiIQ56Og6xBgsHJgmVFgnNNg9AGQJ4PA7g1eSiLwKQ2qfg4gQQi4K4Lg7Q2xVg9glQtQngyKPgq0EgoQtQ4w+gxQswzg7AywwcNsHtQAt4BPQmYAGQ+NEIHNQgxjffEXFhW-GVN6CQeTaBb4VGbQ18BIabafI1Pzcse6NITYQ4SQfbZ0SqfYESBwE5JgBIZ6TI3oPIbba0U0f1FgQo4YCKV8erK4YAZAiOLBMjR1JndBbvDgPjXdZwLo+TbEWZV8H-CiN-NdFwGjFo0YxoiKK-CY3-cnOYzUV8YAm5LgSQWaDRV6KOBwuMUzK4A-C3OQJ4Zo4rSIE-S7Cdd-P-G4naJY8-VeRYgCSYvIK4CWCnVYwcfwqYyNJQjg6QJ4L456YIzUHwtmJ4r-SNHg3WV1BhYXErUXNhE6WIqIp3CPGgjvKvGImg+IxI4PFlerBVJrBY6BYAaPcIrhE6aIsLfhK4YYgvPorYgY3YvAUPD3EYrwko5DEmYQDHcYLHPHYzUiC3S-NwXuF+cnczN2Egfk1hek3IHowoWUvjJUH4t4HkzPYBK4EAReCKXo-onYoYmkzkB+SKHUrIYADgWZCkiUG0u0gwzXfhbvMPLYjU7Uj5GheU8gaBfU9YwocxPjK0g4q0yU-k8AuUJ01gJoNmb0qM7ANnSye-K0xM4I18SE8M30n1AlWZIAA">-
+Squid Game Pedagogy Example</a></p>
+</div>
 
 
 
@@ -248,7 +320,7 @@ $(document).ready(function () {
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();
@@ -256,6 +328,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
