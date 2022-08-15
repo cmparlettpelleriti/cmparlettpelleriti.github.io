@@ -13,25 +13,38 @@
 
 <title>The Chatistician</title>
 
-<script src="site_libs/header-attrs-2.1/header-attrs.js"></script>
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
-<style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
 <script type="text/javascript">
 if (window.hljs) {
   hljs.configure({languages: []});
@@ -44,32 +57,8 @@ if (window.hljs) {
 
 
 
-<style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
-</style>
+
+
 
 
 
@@ -79,10 +68,6 @@ h6 {
   max-width: 940px;
   margin-left: auto;
   margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
 }
 img {
   max-width:100%;
@@ -99,40 +84,16 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 51px;
-  padding-bottom: 40px;
-}
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h2 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h3 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h4 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h5 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h6 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
 .dropdown-submenu {
   position: relative;
 }
@@ -160,7 +121,7 @@ body {
   margin-right: -10px;
 }
 .dropdown-submenu:hover>a:after {
-  border-left-color: #ffffff;
+  border-left-color: #adb5bd;
 }
 .dropdown-submenu.pull-left {
   float: none;
@@ -172,7 +133,7 @@ body {
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -183,10 +144,23 @@ $(document).ready(function () {
   var menuAnchor = $('a[href="' + href + '"]');
 
   // mark it active
-  menuAnchor.parent().addClass('active');
+  menuAnchor.tab('show');
 
   // if it's got a parent navbar menu mark it active as well
   menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
 
@@ -198,7 +172,6 @@ $(document).ready(function () {
   max-height: 500px;
   min-height: 44px;
   overflow-y: auto;
-  background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
@@ -265,7 +238,7 @@ $(document).ready(function () {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -320,7 +293,7 @@ $(document).ready(function () {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
 
 
@@ -336,10 +309,31 @@ $(document).ready(function () {
 <p></br></p>
 <div id="who-am-i" class="section level1">
 <h1>Who am I?</h1>
-<p>Your research and data are important. You have put a lot of work, expertise, and time into getting the right data to answer your questions. And now, it’s time to analyze. You can’t be expected to master the entire field of stats AND your field. You need <em>statistical coaching</em>. That’s why you need me. The Chatistician.</p>
-<p>The Chatistician (that’s me, <strong>Chelsea</strong>) is here to <strong>chat</strong> about all your casual consulting needs. I am a PhD Student (with an M.S.) in the Computational and Data Sciences. My <a href="research.html">research</a> focuses on using Statistics and Machine Learning on Behavioral (read, Psychology) data.</p>
-<p>I want to help people who need a <em>little</em> stats help, but not a full on consulting statistician. Both my help, and my prices are casual. Since I started doing stats, I’ve had friends and family calling me and texting me, asking for <strong>statistical guidance</strong>. I love helping them. But recently I realized that not everyone has a statistician best friend…till now!</p>
-<p>The chatistician aims to <strong>chat</strong> with you and provide you with <strong>statistical advice</strong>, and a sounding board for all your statistical needs. <em>You should hire me if you do your own stats but need a sanity check or answers to make sure you’re doing things well</em>. Need to make sure you’re on the right track? Need someone to proof your methods section, or help you respond to Reviewer #2 with ease? Contact me! I’ll even help you without face-to-face interaction, if you’re having one of those days (check out the <strong>Nano Chat</strong>!)</p>
+<p>Your research and data are important. You have put a lot of work,
+expertise, and time into getting the right data to answer your
+questions. And now, it’s time to analyze. You can’t be expected to
+master the entire field of stats AND your field. You need
+<em>statistical coaching</em>. That’s why you need me. The
+Chatistician.</p>
+<p>The Chatistician (that’s me, <strong>Chelsea</strong>) is here to
+<strong>chat</strong> about all your casual consulting needs. I have a
+Ph.D. in Computational and Data Sciences. My <a
+href="research.html">research</a> focuses on using Statistics and
+Machine Learning on Behavioral (read, Psychology) data.</p>
+<p>I want to help people who need a <em>little</em> stats help, but not
+a full on consulting statistician. Since I started doing stats, I’ve had
+friends and family calling me and texting me, asking for
+<strong>statistical guidance</strong>. I love helping them. But recently
+I realized that not everyone has a statistician best friend…until
+now!</p>
+<p>The chatistician aims to <strong>chat</strong> with you and provide
+you with <strong>statistical advice</strong>, and a sounding board for
+all your statistical needs. <em>You should hire me if you do your own
+stats but need a sanity check or answers to make sure you’re doing
+things well</em>. Need to make sure you’re on the right track? Need
+someone to proof your methods section, or help you respond to Reviewer
+#2 with ease? Contact me! I’ll even help you without face-to-face
+interaction, if you’re having one of those days.</p>
 <p></br> </br></p>
 <div id="why-you-should-hire-me" class="section level3">
 <h3>Why you should hire me:</h3>
@@ -347,7 +341,9 @@ $(document).ready(function () {
 <li>I won’t talk down to you</li>
 <li>I have tons of experience in experimental design</li>
 <li>I know a lot about stats and I love to talk about it</li>
-<li>I’ve honed my ability to talk about complex stats topics in a way that almost anyone can understand (check it out <a href="writing.html">here</a>).</li>
+<li>I’ve honed my ability to talk about complex stats topics in a way
+that almost anyone can understand (check it out <a
+href="writing.html">here</a>).</li>
 </ul>
 </div>
 <div id="what-i-dont-do" class="section level3">
@@ -356,45 +352,44 @@ $(document).ready(function () {
 <li>Run your analyses for you.</li>
 <li>Write your results/methods for you.</li>
 <li>Write your code for you.</li>
-<li>Insist you make me an author on your paper (but you can thank me in the acknowledgments!).</li>
+<li>Insist you make me an author on your paper (but you can thank me in
+the acknowledgments!).</li>
 </ul>
 </div>
 <div id="what-i-can-do" class="section level3">
 <h3>What I can do:</h3>
 <ul>
 <li>Frequentist Statistics</li>
-<li>Bayesian Statistics</li>
+<li>Bayesian Statistics (mainly Stan + brms)</li>
+<li>Multilevel Models (Linear Mixed Effect Models)</li>
 <li>Machine Learning (Supervised AND Unsupervised)</li>
 <li>Survey Design</li>
 <li>Software I am great at: R, Python, JASP, JMP</li>
-<li>Software I am okay at: SPSS, STATA</li>
 </ul>
 </div>
 <div id="what-i-cant-do" class="section level3">
 <h3>What I can’t do:</h3>
 <ul>
-<li>All sorts of things, like roll my R’s and do a pull up. But if you need help with something statistical that is too far out of my area of expertise, I’ll let you know that, recommend people/resources that might be able to help you, and <em>refund your money</em>!</li>
+<li>All sorts of things, like roll my R’s and do a pull up. But if you
+need help with something statistical that is too far out of my area of
+expertise, I’ll let you know that, recommend resources that might be
+able to help you, and <em>refund your money</em>!</li>
 </ul>
 <p></br> </br></p>
 </div>
 </div>
 <div id="testimonials" class="section level1">
 <h1>Testimonials</h1>
-<p>Chelsea is my go-to statistics sanity check. Whenever I have a question about statistics, Chelsea is the first person that I turn to. Chelsea is approachable, jargon-free, and highly knowledgable. She has helped me with everything from basic theory to advanced syntax in lme4. I endorse Chelsea to the fullest.</p>
+<p>Chelsea is my go-to statistics sanity check. Whenever I have a
+question about statistics, Chelsea is the first person that I turn to.
+Chelsea is approachable, jargon-free, and highly knowledgable. She has
+helped me with everything from basic theory to advanced syntax in lme4.
+I endorse Chelsea to the fullest.</p>
 <p>-Emily Sumner, Ph.D. Candidate in Cognitive Sciences</p>
-</div>
-<div id="the-menu" class="section level1">
-<h1>The MENU</h1>
-<p>THE CHATISTICIAN MENU IS UNDER CONSTRUCTION <!-- <center> --> <!-- **Special Introductory Prices!** --> <!-- </center> --></p>
-<!-- </br> -->
-<!-- - **Large Chat ($80):** 60 minute video/voice call consultation + 3 follow up emails. -->
-<!-- - **Medium Chat ($45):** 30 minute video/voice or voice call consultation + 2 follow up emails. -->
-<!-- - **Tiny Chat ($25):** 15 minute video/voice call consultation + 2 follow up emails. -->
-<!-- - **Nano Chat ($20):** A purely text/email consultation. Up to 30 minutes of my time (only my time spent reading/responding counts!). -->
-<!-- - **Reviewer 2 Special ($50):** Need help prepping your methods section? Responding to Reviewer 2's COMPLETELY unfair criticism? I'll spend up to 30 minutes reviewing your paper, and 30 minutes on a video/voice call with you. -->
-<!-- </br> -->
+<p></br> </br></p>
 <center>
-<strong>To hire me, email me at <a href="mailto:chatistician@gmail.com" class="email">chatistician@gmail.com</a></strong>
+<strong>To hire me, email me at <a href="mailto:chatistician@gmail.com"
+class="email">chatistician@gmail.com</a></strong>
 </center>
 </div>
 
@@ -407,7 +402,7 @@ $(document).ready(function () {
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();
@@ -425,7 +420,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
+    $(this).parent().toggleClass('nav-tabs-open');
   });
 });
 </script>
