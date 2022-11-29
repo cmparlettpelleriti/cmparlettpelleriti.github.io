@@ -219,7 +219,7 @@ f = x^2 + xy + y^2
 <p>Therefore the gradient of the function <span class="math inline">\(f\)</span> would be:</p>
 <p><span class="math display">\[
 \begin{bmatrix}
-\frac{\partial f}{\partial y} \\ \frac{\partial f}{\partial y}
+\frac{\partial f}{\partial x} \\ \frac{\partial f}{\partial y}
 \end{bmatrix} =
 \begin{bmatrix}
 2x + y  \\ x + 2y
@@ -228,7 +228,7 @@ f = x^2 + xy + y^2
 <p>If we wanted to minimize the value of <span class="math inline">\(f\)</span>, we could use the gradient in order to do so. Let’s say we started at the point <span class="math inline">\((2,3)\)</span>. Which way should we go in order to <em>decrease</em> <span class="math inline">\(f\)</span>?</p>
 <p><span class="math display">\[
 \begin{bmatrix}
-\frac{\partial f}{\partial y} \\ \frac{\partial f}{\partial y}
+\frac{\partial f}{\partial x} \\ \frac{\partial f}{\partial y}
 \end{bmatrix} =
 \begin{bmatrix}
 2x + y  \\ x + 2y
@@ -279,7 +279,7 @@ Answer
 <p>Okay, so we know which direction to go (<span class="math inline">\(-\begin{bmatrix} 7 \\ 8 \end{bmatrix}\)</span>), but how big of a step do we take? We’ll worry about that in CPSC 393. For now, just know that we choose a sufficiently small step size like <span class="math inline">\(0.01\)</span> (for those interested, some algorithms like Adam use different step sizes at different points in the process).</p>
 <p>If we take steps that are too big, we’ll overshoot minima and zig zag across the parameter space.</p>
 <p>If we take steps that are too small, it will take <em>forever</em> to reach a minima.</p>
-<p>Our step size is usually called <span class="math inline">\(\alpha\)</span>. Let’s use <span class="math inline">\(\alpha = 0.1\)</span>.</p>
+<p>Our step size is usually called <span class="math inline">\(\alpha\)</span>. Let’s use <span class="math inline">\(\alpha = 0.01\)</span>.</p>
 <p><img src="https://builtin.com/sites/www.builtin.com/files/styles/ckeditor_optimize/public/inline-images/national/gradient-descent-learning-rate.png" class="img-fluid"></p>
 </section>
 <section id="updating-parameters" class="level2" data-number="2.3">
@@ -331,7 +331,7 @@ f = x^2 + xy + y^2 = 3.7249 + 5.6356 + 8.5264 = 17.8869
 </section>
 <section id="gradient-descent-for-linear-regression" class="level1" data-number="3">
 <h1 data-number="3"><span class="header-section-number">3</span> Gradient Descent for Linear Regression</h1>
-<p>Alright, now for a loss function that we’ve learned about: <strong>mean squared error</strong>.</p>
+<p>Alright, now for a loss function that we’ve learned about: <strong>Sum of squared error</strong>.</p>
 <div class="callout-caution callout callout-style-default callout-captioned">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -342,7 +342,7 @@ Sum of Squared Error
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The <strong>mean squared error</strong> or <strong>MSE</strong> is a loss function for models that predict <em>continuous</em> values, like linear regression. It measures the average squared distance between our model’s guess and the actual value.</p>
+<p>The <strong>Sum of squared error</strong> or <strong>SSE</strong> is a loss function for models that predict <em>continuous</em> values, like linear regression. It measures the average squared distance between our model’s guess and the actual value.</p>
 <p><span class="math display">\[
 SSE = \sum_i^N (y_i - \hat{y})^2
 \]</span></p>
@@ -558,6 +558,10 @@ SSE = (1 - (0.08 + 0.14*1))^2 + (3 - 0.8 - 0.14*2)^2 = 0.6084 + 3.6864 = 4.2948
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># create data frame from (1,1), (2,3)</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">"x"</span>: [<span class="dv">1</span>,<span class="dv">2</span>], <span class="st">"y"</span>: [<span class="dv">1</span>,<span class="dv">3</span>]})</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/IPython/core/formatters.py:343: FutureWarning: In future versions `DataFrame.to_latex` is expected to utilise the base implementation of `Styler.to_latex` for formatting and rendering. The arguments signature may therefore change. It is recommended instead to use `DataFrame.style.to_latex` which also contains additional functionality.
+  return method()</code></pre>
+</div>
 <div class="cell-output cell-output-display" data-execution_count="11">
 
 <div>
@@ -587,41 +591,45 @@ SSE = (1 - (0.08 + 0.14*1))^2 + (3 - 0.8 - 0.14*2)^2 = 0.6084 + 3.6864 = 4.2948
 </div>
 </div>
 <div class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> stepGradient(b0_current, b1_current, points, learningRate):</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># initialize gradient to 0</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    b0_gradient <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    b1_gradient <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># for each data point, calculate gradient and add </span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="bu">len</span>(points)):</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        b0_gradient <span class="op">+=</span> <span class="op">-</span><span class="dv">2</span> <span class="op">*</span> (points.iloc[i].y <span class="op">-</span> ((b1_current<span class="op">*</span>points.iloc[i].x) <span class="op">+</span> b0_current))</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        b1_gradient <span class="op">+=</span> <span class="op">-</span><span class="dv">2</span> <span class="op">*</span> points.iloc[i].x <span class="op">*</span> (points.iloc[i].y <span class="op">-</span> ((b1_current <span class="op">*</span> points.iloc[i].x) <span class="op">+</span> b0_current))</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># update parameter values</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    new_b0 <span class="op">=</span> b0_current <span class="op">-</span> (learningRate <span class="op">*</span> b0_gradient)</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    new_b1 <span class="op">=</span> b1_current <span class="op">-</span> (learningRate <span class="op">*</span> b1_gradient)</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> [np.<span class="bu">round</span>(new_b0,<span class="dv">5</span>), np.<span class="bu">round</span>(new_b1,<span class="dv">5</span>)]</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Our new parameter values are: "</span>, stepGradient(<span class="dv">0</span>,<span class="dv">0</span>, df, <span class="fl">0.01</span>))</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co">#based on https://spin.atomicobject.com/2014/06/24/gradient-descent-linear-regression/</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> stepGradient(b0_current, b1_current, points, learningRate):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># initialize gradient to 0</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    b0_gradient <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    b1_gradient <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># for each data point, calculate gradient and add </span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="bu">len</span>(points)):</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        b0_gradient <span class="op">+=</span> <span class="op">-</span><span class="dv">2</span> <span class="op">*</span> (points.iloc[i].y <span class="op">-</span> ((b1_current<span class="op">*</span>points.iloc[i].x) <span class="op">+</span> b0_current))</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        b1_gradient <span class="op">+=</span> <span class="op">-</span><span class="dv">2</span> <span class="op">*</span> points.iloc[i].x <span class="op">*</span> (points.iloc[i].y <span class="op">-</span> ((b1_current <span class="op">*</span> points.iloc[i].x) <span class="op">+</span> b0_current))</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># update parameter values</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    new_b0 <span class="op">=</span> b0_current <span class="op">-</span> (learningRate <span class="op">*</span> b0_gradient)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    new_b1 <span class="op">=</span> b1_current <span class="op">-</span> (learningRate <span class="op">*</span> b1_gradient)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> [np.<span class="bu">round</span>(new_b0,<span class="dv">5</span>), np.<span class="bu">round</span>(new_b1,<span class="dv">5</span>)]</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Our new parameter values are: "</span>, stepGradient(<span class="dv">0</span>,<span class="dv">0</span>, df, <span class="fl">0.01</span>))</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#based on https://spin.atomicobject.com/2014/06/24/gradient-descent-linear-regression/</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Our new parameter values are:  [0.08, 0.14]</code></pre>
 </div>
 </div>
 <p>We can even use it to take yet another step!</p>
 <div class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Our new parameter values are: "</span>, stepGradient(<span class="fl">0.08</span>,<span class="fl">0.14</span>, df, <span class="fl">0.01</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Our new parameter values are: "</span>, stepGradient(<span class="fl">0.08</span>,<span class="fl">0.14</span>, df, <span class="fl">0.01</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Our new parameter values are:  [0.1484, 0.2612]</code></pre>
 </div>
 </div>
 <p>OR we can try it with a lot more data points!</p>
 <div class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create data frame </span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.random.normal(loc <span class="op">=</span> <span class="dv">0</span>, scale <span class="op">=</span> <span class="dv">1</span>, size <span class="op">=</span> <span class="dv">100</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> <span class="fl">1.67</span> <span class="op">+</span> <span class="fl">0.67</span><span class="op">*</span>x <span class="op">+</span> np.random.normal(loc <span class="op">=</span> <span class="dv">0</span>, scale <span class="op">=</span> <span class="fl">0.2</span>, size <span class="op">=</span> <span class="dv">100</span>)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>df2 <span class="op">=</span> pd.DataFrame({<span class="st">"x"</span>: x, <span class="st">"y"</span>: y})</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>df2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create data frame </span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.random.normal(loc <span class="op">=</span> <span class="dv">0</span>, scale <span class="op">=</span> <span class="dv">1</span>, size <span class="op">=</span> <span class="dv">100</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> <span class="fl">1.67</span> <span class="op">+</span> <span class="fl">0.67</span><span class="op">*</span>x <span class="op">+</span> np.random.normal(loc <span class="op">=</span> <span class="dv">0</span>, scale <span class="op">=</span> <span class="fl">0.2</span>, size <span class="op">=</span> <span class="dv">100</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>df2 <span class="op">=</span> pd.DataFrame({<span class="st">"x"</span>: x, <span class="st">"y"</span>: y})</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>df2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/IPython/core/formatters.py:343: FutureWarning: In future versions `DataFrame.to_latex` is expected to utilise the base implementation of `Styler.to_latex` for formatting and rendering. The arguments signature may therefore change. It is recommended instead to use `DataFrame.style.to_latex` which also contains additional functionality.
+  return method()</code></pre>
+</div>
 <div class="cell-output cell-output-display" data-execution_count="14">
 
 <div>
@@ -637,28 +645,28 @@ SSE = (1 - (0.08 + 0.14*1))^2 + (3 - 0.8 - 0.14*2)^2 = 0.6084 + 3.6864 = 4.2948
   <tbody>
     <tr>
       <th>0</th>
-      <td>0.238015</td>
-      <td>1.769710</td>
+      <td>0.322113</td>
+      <td>1.692824</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>0.022259</td>
-      <td>1.890966</td>
+      <td>-1.091226</td>
+      <td>1.194813</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>1.446678</td>
-      <td>3.036868</td>
+      <td>-1.390579</td>
+      <td>0.672256</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>0.763668</td>
-      <td>2.590071</td>
+      <td>-0.105889</td>
+      <td>1.632720</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>0.622178</td>
-      <td>2.280164</td>
+      <td>1.349562</td>
+      <td>2.173008</td>
     </tr>
     <tr>
       <th>...</th>
@@ -667,28 +675,28 @@ SSE = (1 - (0.08 + 0.14*1))^2 + (3 - 0.8 - 0.14*2)^2 = 0.6084 + 3.6864 = 4.2948
     </tr>
     <tr>
       <th>95</th>
-      <td>0.748492</td>
-      <td>2.238871</td>
+      <td>1.245773</td>
+      <td>2.858929</td>
     </tr>
     <tr>
       <th>96</th>
-      <td>-1.107428</td>
-      <td>0.741955</td>
+      <td>-1.240077</td>
+      <td>0.876913</td>
     </tr>
     <tr>
       <th>97</th>
-      <td>0.650889</td>
-      <td>1.862546</td>
+      <td>0.689458</td>
+      <td>2.123166</td>
     </tr>
     <tr>
       <th>98</th>
-      <td>0.767996</td>
-      <td>1.807791</td>
+      <td>-0.163520</td>
+      <td>1.392116</td>
     </tr>
     <tr>
       <th>99</th>
-      <td>-0.804245</td>
-      <td>0.997801</td>
+      <td>0.185886</td>
+      <td>1.627160</td>
     </tr>
   </tbody>
 </table>
@@ -697,9 +705,9 @@ SSE = (1 - (0.08 + 0.14*1))^2 + (3 - 0.8 - 0.14*2)^2 = 0.6084 + 3.6864 = 4.2948
 </div>
 </div>
 <div class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Our new parameter values are: "</span>, stepGradient(<span class="dv">0</span>,<span class="dv">0</span>, df2, <span class="fl">0.01</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Our new parameter values are: "</span>, stepGradient(<span class="dv">0</span>,<span class="dv">0</span>, df2, <span class="fl">0.01</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Our new parameter values are:  [3.52941, 1.48074]</code></pre>
+<pre><code>Our new parameter values are:  [3.5221, 1.81407]</code></pre>
 </div>
 </div>
 </section>
