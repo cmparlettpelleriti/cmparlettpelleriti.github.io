@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.1.189">
+<meta name="generator" content="quarto-1.0.36">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,15 +12,10 @@
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
-ul.task-list li input[type="checkbox"] {
-  width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
-  vertical-align: middle;
-}
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -59,7 +54,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
+code span.bu { } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -72,7 +67,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.im { } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -109,24 +104,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
 <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-  <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="TOC" role="doc-toc">
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#review-of-gradient-descent-concepts" id="toc-review-of-gradient-descent-concepts" class="nav-link active" data-scroll-target="#review-of-gradient-descent-concepts"><span class="toc-section-number">1</span>  Review of Gradient Descent Concepts</a></li>
-  <li><a href="#gradient-descent-math" id="toc-gradient-descent-math" class="nav-link" data-scroll-target="#gradient-descent-math"><span class="toc-section-number">2</span>  Gradient Descent Math</a>
+  <li><a href="#review-of-gradient-descent-concepts" id="toc-review-of-gradient-descent-concepts" class="nav-link active" data-scroll-target="#review-of-gradient-descent-concepts"> <span class="header-section-number">1</span> Review of Gradient Descent Concepts</a></li>
+  <li><a href="#gradient-descent-math" id="toc-gradient-descent-math" class="nav-link" data-scroll-target="#gradient-descent-math"> <span class="header-section-number">2</span> Gradient Descent Math</a>
   <ul class="collapse">
-  <li><a href="#gradients" id="toc-gradients" class="nav-link" data-scroll-target="#gradients"><span class="toc-section-number">2.1</span>  Gradients</a>
+  <li><a href="#gradients" id="toc-gradients" class="nav-link" data-scroll-target="#gradients"> <span class="header-section-number">2.1</span> Gradients</a>
   <ul class="collapse">
   <li><a href="#partial-derivatives" id="toc-partial-derivatives" class="nav-link" data-scroll-target="#partial-derivatives">Partial Derivatives</a></li>
   </ul></li>
-  <li><a href="#step-sizelearning-rate" id="toc-step-sizelearning-rate" class="nav-link" data-scroll-target="#step-sizelearning-rate"><span class="toc-section-number">2.2</span>  Step Size/Learning Rate</a></li>
-  <li><a href="#updating-parameters" id="toc-updating-parameters" class="nav-link" data-scroll-target="#updating-parameters"><span class="toc-section-number">2.3</span>  Updating Parameters</a></li>
-  <li><a href="#sanity-check" id="toc-sanity-check" class="nav-link" data-scroll-target="#sanity-check"><span class="toc-section-number">2.4</span>  Sanity Check</a></li>
+  <li><a href="#step-sizelearning-rate" id="toc-step-sizelearning-rate" class="nav-link" data-scroll-target="#step-sizelearning-rate"> <span class="header-section-number">2.2</span> Step Size/Learning Rate</a></li>
+  <li><a href="#updating-parameters" id="toc-updating-parameters" class="nav-link" data-scroll-target="#updating-parameters"> <span class="header-section-number">2.3</span> Updating Parameters</a></li>
+  <li><a href="#sanity-check" id="toc-sanity-check" class="nav-link" data-scroll-target="#sanity-check"> <span class="header-section-number">2.4</span> Sanity Check</a></li>
   </ul></li>
-  <li><a href="#gradient-descent-for-linear-regression" id="toc-gradient-descent-for-linear-regression" class="nav-link" data-scroll-target="#gradient-descent-for-linear-regression"><span class="toc-section-number">3</span>  Gradient Descent for Linear Regression</a>
+  <li><a href="#gradient-descent-for-linear-regression" id="toc-gradient-descent-for-linear-regression" class="nav-link" data-scroll-target="#gradient-descent-for-linear-regression"> <span class="header-section-number">3</span> Gradient Descent for Linear Regression</a>
   <ul class="collapse">
-  <li><a href="#calculations" id="toc-calculations" class="nav-link" data-scroll-target="#calculations"><span class="toc-section-number">3.1</span>  Calculations</a>
+  <li><a href="#calculations" id="toc-calculations" class="nav-link" data-scroll-target="#calculations"> <span class="header-section-number">3.1</span> Calculations</a>
   <ul class="collapse">
   <li><a href="#gradient-of-sse" id="toc-gradient-of-sse" class="nav-link" data-scroll-target="#gradient-of-sse">Gradient of SSE</a></li>
   <li><a href="#gradient-of-sse-at-a-specific-point" id="toc-gradient-of-sse-at-a-specific-point" class="nav-link" data-scroll-target="#gradient-of-sse-at-a-specific-point">Gradient of SSE at a specific point</a></li>
@@ -136,8 +131,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#code" id="toc-code" class="nav-link" data-scroll-target="#code">Code</a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#variations-on-gradient-descent" id="toc-variations-on-gradient-descent" class="nav-link" data-scroll-target="#variations-on-gradient-descent"><span class="toc-section-number">4</span>  Variations on Gradient Descent</a></li>
-  <li><a href="#takeaways" id="toc-takeaways" class="nav-link" data-scroll-target="#takeaways"><span class="toc-section-number">5</span>  Takeaways</a></li>
+  <li><a href="#variations-on-gradient-descent" id="toc-variations-on-gradient-descent" class="nav-link" data-scroll-target="#variations-on-gradient-descent"> <span class="header-section-number">4</span> Variations on Gradient Descent</a></li>
+  <li><a href="#takeaways" id="toc-takeaways" class="nav-link" data-scroll-target="#takeaways"> <span class="header-section-number">5</span> Takeaways</a></li>
   </ul>
 </nav>
 </div>
@@ -199,8 +194,8 @@ Gradient
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>A gradient is <em>technically</em> a vector of partial derivatives of the loss function with respect to each of our parameter values. In non-math-speak, a gradient tells us how the loss function changes when we change each parameter.</p>
-<p>For example, in a simple linear regression with only an intercept and one coefficient, the gradient would tell you how your loss would change if you increased your intercept a little, and how your loss would change if you increased the coefficient a little.</p>
+<p>A gradient is <em>technically</em> a vector of partial derivatives of the loss function with respect to each of our parameter values. In non-math-speak, a gradient tells us how the loss function changes when we change each parameter (holding the others constant).</p>
+<p>For example, in a simple linear regression with only an intercept and one coefficient, the gradient would tell you how your loss changes if you increased your intercept a little, and how your loss changes if you increased the coefficient a little.</p>
 <p>By the way, we don’t cover this in 392, but gradients are COMPLICATED to calculate for bigger models, so we use <strong>Backpropagation</strong> in order to compute it. <strong>Backpropagation</strong> is an algorithm for computing the gradient for models like Neural Networks.</p>
 </div>
 </div>
@@ -211,12 +206,12 @@ Gradient
 f = x^2 + xy + y^2
 \]</span></p>
 <p><em>(Visualize this function <a href="https://www.geogebra.org/3d?lang=en">here</a> by typing in “x^2 + xy + y^2”)</em></p>
-<p>The function <span class="math inline">\(f\)</span>’s value depends on two variables, <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>. The partial derivative of <span class="math inline">\(f\)</span> with respect to <span class="math inline">\(x\)</span> asks “how does <span class="math inline">\(f\)</span> change when we change <span class="math inline">\(x\)</span> (holding <span class="math inline">\(y\)</span> constant)?”. We can tell, just by looking at the equation that as <span class="math inline">\(x\)</span> increases, <span class="math inline">\(f\)</span> is going to go up by a lot because there’s an <span class="math inline">\(x^2\)</span> and a <span class="math inline">\(xy\)</span> in there!</p>
+<p>The function <span class="math inline">\(f\)</span>’s value depends on two variables, <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>. The partial derivative of <span class="math inline">\(f\)</span> with respect to <span class="math inline">\(x\)</span> asks “how is <span class="math inline">\(f\)</span> changing when we change <span class="math inline">\(x\)</span> (holding <span class="math inline">\(y\)</span> constant)?”. We can tell, just by looking at the equation that for positive values, as <span class="math inline">\(x\)</span> increases, <span class="math inline">\(f\)</span> is going to go up by a lot because there’s an <span class="math inline">\(x^2\)</span> and a <span class="math inline">\(xy\)</span> in there!</p>
 <p>Mathematically, we can take the derivative of <span class="math inline">\(f\)</span> treating <span class="math inline">\(y\)</span> as if it’s a constant value (like 1, or 6, or 2.5678).</p>
 <p><span class="math display">\[
 \frac{\partial f}{\partial x} = 2x + y
 \]</span></p>
-<p>This tells us that when <span class="math inline">\(x\)</span> changes, <span class="math inline">\(f\)</span> will change by <span class="math inline">\(2x + y\)</span>.</p>
+<p>This tells us that when <span class="math inline">\(x\)</span> changes, <span class="math inline">\(f\)</span> is changing by <span class="math inline">\(2x + y\)</span>.</p>
 <p>We can do the same for y.</p>
 <p><span class="math display">\[
 \frac{\partial f}{\partial y} = x + 2y
@@ -230,7 +225,7 @@ f = x^2 + xy + y^2
 2x + y  \\ x + 2y
 \end{bmatrix}
 \]</span></p>
-<p>If we wanted to minimize the value of <span class="math inline">\(f\)</span>, we could use the gradient in order to do so. Let’s say we started at the point <span class="math inline">\((2,3)\)</span>. Which way should we go in order to <em>decrease</em> <span class="math inline">\(f\)</span>?</p>
+<p>If we wanted to minimize the value of <span class="math inline">\(f\)</span>, we could use the gradient in order to do so. Let’s say we started at the point <span class="math inline">\((2,3)\)</span>. Which way should we go in order to <em>decrease</em> <span class="math inline">\(f\)</span> (use the 3D graph you pulled up to see)?</p>
 <p><span class="math display">\[
 \begin{bmatrix}
 \frac{\partial f}{\partial x} \\ \frac{\partial f}{\partial y}
@@ -281,10 +276,10 @@ Answer
 </section>
 <section id="step-sizelearning-rate" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="step-sizelearning-rate"><span class="header-section-number">2.2</span> Step Size/Learning Rate</h2>
-<p>Okay, so we know which direction to go (<span class="math inline">\(-\begin{bmatrix} 7 \\ 8 \end{bmatrix}\)</span>), but how big of a step do we take? We’ll worry about that in CPSC 393. For now, just know that we choose a sufficiently small step size like <span class="math inline">\(0.01\)</span> (for those interested, some algorithms like Adam use different step sizes at different points in the process).</p>
-<p>If we take steps that are too big, we’ll overshoot minima and zig zag across the parameter space.</p>
-<p>If we take steps that are too small, it will take <em>forever</em> to reach a minima.</p>
-<p>Our step size is usually called <span class="math inline">\(\alpha\)</span>. Let’s use <span class="math inline">\(\alpha = 0.01\)</span>.</p>
+<p>Okay, so we know which direction to go (<span class="math inline">\(-\begin{bmatrix} 7 \\ 8 \end{bmatrix}\)</span>), but how big of a step do we take? We’ll worry about that in CPSC 393. For now, just know that we choose a sufficiently small learning rate like <span class="math inline">\(0.01\)</span> (for those interested, some algorithms like Adam use different learning rates for different parts of the process).</p>
+<p>If we take steps that are too big (have a big learning rate), we’ll overshoot minima and zig zag across the parameter space.</p>
+<p>If we take steps that are too small (have a small learning rate), it will take <em>forever</em> to reach a minima.</p>
+<p>Our learning rate is usually called <span class="math inline">\(\alpha\)</span>. Let’s use <span class="math inline">\(\alpha = 0.01\)</span>.</p>
 <p><img src="https://builtin.com/sites/www.builtin.com/files/styles/ckeditor_optimize/public/inline-images/national/gradient-descent-learning-rate.png" class="img-fluid"></p>
 </section>
 <section id="updating-parameters" class="level2" data-number="2.3">
@@ -327,7 +322,8 @@ x_{new} \\ y_{new}
 <p>Plugging both in we get:</p>
 <p><span class="math display">\[
 f = x^2 + xy + y^2 = 4 + 6 + 9 = 19
-\]</span> <span class="math display">\[
+\]</span></p>
+<p><span class="math display">\[
 f = x^2 + xy + y^2 = 3.7249 + 5.6356 + 8.5264 = 17.8869
 \]</span></p>
 <p>HOORAY! Our step did infact decrease <span class="math inline">\(f\)</span>!</p>
@@ -335,18 +331,18 @@ f = x^2 + xy + y^2 = 3.7249 + 5.6356 + 8.5264 = 17.8869
 </section>
 <section id="gradient-descent-for-linear-regression" class="level1" data-number="3">
 <h1 data-number="3"><span class="header-section-number">3</span> Gradient Descent for Linear Regression</h1>
-<p>Alright, now for a loss function that we’ve learned about: <strong>Sum of squared error</strong>.</p>
+<p>Alright, now for a loss function that we’ve learned about: <strong>Sum of squared errors</strong>.</p>
 <div class="callout-caution callout callout-style-default callout-captioned">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-caption-container flex-fill">
-Sum of Squared Error
+Sum of Squared Errors
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The <strong>Sum of squared error</strong> or <strong>SSE</strong> is a loss function for models that predict <em>continuous</em> values, like linear regression. It measures the average squared distance between our model’s guess and the actual value.</p>
+<p>The <strong>Sum of squared errors</strong> or <strong>SSE</strong> is a loss function for models that predict <em>continuous</em> values, like linear regression. It measures the average squared distance between our model’s guess and the actual value.</p>
 <p><span class="math display">\[
 SSE = \sum_i^N (y_i - \hat{y})^2
 \]</span></p>
@@ -366,7 +362,7 @@ SSE = \sum_i^N (y_i - (b_0 + b_1x))^2 = \sum_i^N (y_i - b_0 - b_1x)^2
 <h2 data-number="3.1" class="anchored" data-anchor-id="calculations"><span class="header-section-number">3.1</span> Calculations</h2>
 <section id="gradient-of-sse" class="level3">
 <h3 class="anchored" data-anchor-id="gradient-of-sse">Gradient of SSE</h3>
-<p>The gradient of the loss function <span class="math inline">\(SSE = \sum_i^N (y_i - (b_0 + b_1x))^2\)</span> tells us how changing the intercept (<span class="math inline">\(b_0\)</span>) and the coefficient (<span class="math inline">\(b_1\)</span>) change our SSE.</p>
+<p>The gradient of the loss function <span class="math inline">\(SSE = \sum_i^N (y_i - (b_0 + b_1x))^2\)</span> tells us how changing the intercept (<span class="math inline">\(b_0\)</span>) and the coefficient (<span class="math inline">\(b_1\)</span>) change our SSE at a given point.</p>
 <div class="callout-warning callout callout-style-default callout-captioned">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -381,21 +377,27 @@ Derivative Rules
 <div class="callout-body-container callout-body">
 <section id="the-chain-rule" class="level3">
 <h3 class="anchored" data-anchor-id="the-chain-rule">The Chain Rule</h3>
-<p>The chain rule says that if you want to take the derivative of a composite function (a function applied to another function) the derivative is as follows: <span class="math display">\[
+<p>The chain rule says that if you want to take the derivative of a composite function (a function applied to another function) the derivative is as follows:</p>
+<p><span class="math display">\[
 \frac{d}{dx}f(g(x)) = f'(g(x))*g'(x)
 \]</span></p>
 <p>e.g.&nbsp;</p>
-<p>If we use these simpler functions <span class="math display">\[
+<p>If we use these simpler functions</p>
+<p><span class="math display">\[
 f(x) = x^2
-\]</span> <span class="math display">\[
+\]</span></p>
+<p><span class="math display">\[
 g(x) = 3x + 1
 \]</span></p>
-<p>to make the complex function <span class="math inline">\(f(g(x)) = (3x + 1)^2\)</span> and take the derivative of it, we need <span class="math inline">\(f'(g(x))\)</span> and <span class="math inline">\(g'(x)\)</span>: <span class="math display">\[
+<p>to make the complex function <span class="math inline">\(f(g(x)) = (3x + 1)^2\)</span> and take the derivative of it, we need <span class="math inline">\(f'(g(x))\)</span> and <span class="math inline">\(g'(x)\)</span>:</p>
+<p><span class="math display">\[
 f'(g(x)) = 2(3x + 1)
-\]</span> <span class="math display">\[
+\]</span></p>
+<p><span class="math display">\[
 g'(x) = 3
 \]</span></p>
-<p>Which give us: <span class="math display">\[
+<p>Which give us:</p>
+<p><span class="math display">\[
 \frac{d}{d x} (3x + 1)^2 = 2(3x + 1) * 3 = 6(3x + 1) = 18x + 6
 \]</span></p>
 </section>
@@ -435,7 +437,8 @@ Summation Rules
 <p>If every element in a summation is multplied by a constant, you can take the constant out of the summation:</p>
 <p><span class="math display">\[
 \sum_i^N ax_{i} = ax_{1} + ax_{2}+ ... + ax_{N} =
-\]</span> <span class="math display">\[
+\]</span></p>
+<p><span class="math display">\[
 a \sum_i^N x_{i}
 \]</span></p>
 </section>
@@ -493,7 +496,7 @@ a \sum_i^N x_{i}
 </section>
 <section id="take-a-step" class="level3">
 <h3 class="anchored" data-anchor-id="take-a-step">Take a step</h3>
-<p>Applying our step size of <span class="math inline">\(\alpha = 0.01\)</span> this means that we should adjust <span class="math inline">\(b_0\)</span> and <span class="math inline">\(b_1\)</span> like this:</p>
+<p>Applying our learning rate of <span class="math inline">\(\alpha = 0.01\)</span> this means that we should adjust <span class="math inline">\(b_0\)</span> and <span class="math inline">\(b_1\)</span> like this:</p>
 <p><span class="math display">\[
 \begin{bmatrix}
 b_0 \\
@@ -541,7 +544,8 @@ b_1
 <p><span class="math display">\[
 SSE = (1 - (0 + 0*1))^2 + (3 - 0 - 0*2)^2 = 1 + 9 = 10
 \]</span></p>
-<p>And our new loss is: <span class="math display">\[
+<p>And our new loss is:</p>
+<p><span class="math display">\[
 SSE = (1 - (0.08 + 0.14*1))^2 + (3 - 0.8 - 0.14*2)^2 = 0.6084 + 3.6864 = 4.2948
 \]</span></p>
 <p>Hooray! Again, our loss is lower! We’ve taken a step in the right direction.</p>
@@ -634,28 +638,28 @@ SSE = (1 - (0.08 + 0.14*1))^2 + (3 - 0.8 - 0.14*2)^2 = 0.6084 + 3.6864 = 4.2948
   <tbody>
     <tr>
       <th>0</th>
-      <td>-0.002959</td>
-      <td>1.799603</td>
+      <td>-2.129483</td>
+      <td>0.121351</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>1.021292</td>
-      <td>2.289712</td>
+      <td>0.158742</td>
+      <td>1.744994</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>0.889628</td>
-      <td>2.074126</td>
+      <td>1.344318</td>
+      <td>2.721665</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>-0.980568</td>
-      <td>0.780868</td>
+      <td>-1.768763</td>
+      <td>0.534813</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>-0.805269</td>
-      <td>1.204373</td>
+      <td>1.427576</td>
+      <td>2.748702</td>
     </tr>
     <tr>
       <th>...</th>
@@ -664,28 +668,28 @@ SSE = (1 - (0.08 + 0.14*1))^2 + (3 - 0.8 - 0.14*2)^2 = 0.6084 + 3.6864 = 4.2948
     </tr>
     <tr>
       <th>95</th>
-      <td>-0.959122</td>
-      <td>0.876096</td>
+      <td>0.867098</td>
+      <td>2.461101</td>
     </tr>
     <tr>
       <th>96</th>
-      <td>0.635642</td>
-      <td>2.014228</td>
+      <td>0.439935</td>
+      <td>1.247775</td>
     </tr>
     <tr>
       <th>97</th>
-      <td>-0.761794</td>
-      <td>1.232037</td>
+      <td>-1.723074</td>
+      <td>0.507847</td>
     </tr>
     <tr>
       <th>98</th>
-      <td>-1.251509</td>
-      <td>0.548154</td>
+      <td>-0.121749</td>
+      <td>1.807843</td>
     </tr>
     <tr>
       <th>99</th>
-      <td>0.156677</td>
-      <td>1.647874</td>
+      <td>-0.902453</td>
+      <td>0.936542</td>
     </tr>
   </tbody>
 </table>
@@ -696,7 +700,7 @@ SSE = (1 - (0.08 + 0.14*1))^2 + (3 - 0.8 - 0.14*2)^2 = 0.6084 + 3.6864 = 4.2948
 <div class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Our new parameter values are: "</span>, stepGradient(<span class="dv">0</span>,<span class="dv">0</span>, df2, <span class="fl">0.01</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Our new parameter values are:  [3.18313, 0.79615]</code></pre>
+<pre><code>Our new parameter values are:  [3.12646, 0.78639]</code></pre>
 </div>
 </div>
 </section>
@@ -720,7 +724,7 @@ SSE = (1 - (0.08 + 0.14*1))^2 + (3 - 0.8 - 0.14*2)^2 = 0.6084 + 3.6864 = 4.2948
 <li>Gradient Descent is an iterative algorithm for finding a minima of a function</li>
 <li>We want to minimize our loss functions so that our models do well</li>
 <li>Gradient Descent uses partial derivatives to show us <em>how</em> we should change our parameters (e.g.&nbsp;coefficients…) in order to take one step closer to a minima</li>
-<li>Step Size (or Learning Rate) tells us how big of a step to take in that direction. Too big and we might step over a minima, to small and it will take forever</li>
+<li>Learning Rates tells us how big of a step to take in that direction. Too big and we might step over a minima, to small and it will take forever</li>
 <li>When calculating the gradient for a group of points, we take the sum of the gradient of each individual point</li>
 </ul>
 </section>
@@ -796,8 +800,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   for (var i=0; i<noterefs.length; i++) {
     const ref = noterefs[i];
     tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      let href = ref.getAttribute('href');
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
