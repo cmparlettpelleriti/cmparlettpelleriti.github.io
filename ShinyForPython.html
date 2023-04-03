@@ -126,8 +126,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#boolean-inputs" id="toc-boolean-inputs" class="nav-link" data-scroll-target="#boolean-inputs"><span class="toc-section-number">11</span>  Boolean Inputs</a></li>
   <li><a href="#additional-ui" id="toc-additional-ui" class="nav-link" data-scroll-target="#additional-ui"><span class="toc-section-number">12</span>  Additional UI</a></li>
   <li><a href="#external-packages" id="toc-external-packages" class="nav-link" data-scroll-target="#external-packages"><span class="toc-section-number">13</span>  External Packages</a></li>
-  <li><a href="#reactivity" id="toc-reactivity" class="nav-link" data-scroll-target="#reactivity"><span class="toc-section-number">14</span>  Reactivity</a></li>
-  <li><a href="#sharing-your-app-with-shinys-serverless-deployment" id="toc-sharing-your-app-with-shinys-serverless-deployment" class="nav-link" data-scroll-target="#sharing-your-app-with-shinys-serverless-deployment"><span class="toc-section-number">15</span>  Sharing your App with Shiny’s Serverless Deployment</a></li>
+  <li><a href="#more-shiny-features" id="toc-more-shiny-features" class="nav-link" data-scroll-target="#more-shiny-features"><span class="toc-section-number">14</span>  More Shiny Features</a></li>
+  <li><a href="#sharing-your-app" id="toc-sharing-your-app" class="nav-link" data-scroll-target="#sharing-your-app"><span class="toc-section-number">15</span>  Sharing your App</a></li>
   </ul>
 </nav>
 </div>
@@ -169,9 +169,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="examples" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> Examples</h1>
 <ul>
-<li>Wordle</li>
-<li>Regularization</li>
-<li>CPU Usage</li>
+<li><a href="https://shinylive.io/py/examples/#wordle">Wordle</a></li>
+<li><a href="https://shinylive.io/py/examples/#regularization">Regularization</a></li>
+<li><a href="https://shinylive.io/py/examples/#cpu-info">CPU Usage</a></li>
 <li>Binomial</li>
 </ul>
 <div class="cell" data-execution_count="1">
@@ -517,7 +517,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="build-your-own-app" class="level1" data-number="3">
 <h1 data-number="3"><span class="header-section-number">3</span> Build your own App</h1>
-<p><img src="Upload.png" class="img-fluid"></p>
+<p><img src="https://posit.co/wp-content/uploads/2023/02/thumbnail-10.png" class="img-fluid"></p>
 <p>Let’s import the functions we’ll need from the Shiny Package.</p>
 <div class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> shiny <span class="im">import</span> App, render, ui</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -584,7 +584,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1 data-number="6"><span class="header-section-number">6</span> Adding to the Server Function</h1>
 <p>So, let’s go ahead and do that now! Since our plot is a type of output, we’re going to use the <code>@output</code> and <code>@render.plot()</code> decorators to tell the server that we’re telling it how to construct our iris plot. We’ll also finally need to load in our data so that our plot can actually plot somehting. Because we want this to happen only ONCE when we open the app, we’re going to load the data right after the import statements, not inside the ui or server portions of the code.</p>
 <p>When using Shiny for Python’s web interface, we’ll need to upload our <code>iris.csv</code> file so that the app can load in the data. You can do that by clicking the upload button next to all your file tabs.</p>
-<p><img src="https://drive.google.com/file/d/1gcCv-mHhbfmBji9DmCZWKJ_eaEMHUVbt/view?usp=share_link.png" class="img-fluid"></p>
+<p><img src="/Images/Upload.png" class="img-fluid"></p>
 <p>We’re going to use <code>seaborn</code> to create a simple scatterplot of the Sepal Length’s and Sepal Widths in our data. Under our decorators we’re going to define a function that has the <em>same name</em> as the argument in our <code>output_plot()</code> (in this case, <code>iris</code>). The function should <strong>return</strong> our completed plot.</p>
 <div class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> shiny <span class="im">import</span> App, render, ui</span>
@@ -884,15 +884,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <p>Wow! We have a beautiful flower in our input title. And we can use this method to install and use any other python package supported by pyodide.</p>
 </section>
-<section id="reactivity" class="level1" data-number="14">
-<h1 data-number="14"><span class="header-section-number">14</span> Reactivity</h1>
+<section id="more-shiny-features" class="level1" data-number="14">
+<h1 data-number="14"><span class="header-section-number">14</span> More Shiny Features</h1>
 <p>We just used Shiny for Python to painlessly built a dynamic user interface to explore the iris data using a <code>seaborn</code> plot. But we haven’t even scratched the surface of Shiny’s power. For one, we can have dynamic text that updates based on a user’s selections (see the <code>@render.text()</code>s in the IRT app), or reactive effects that allow us to specify when updates to our output should happen (see <code>@reactive.Effect</code> in the Frog Jump Binomial App). We can also use the <code>ui</code> submodule as well as plain old HTML to customize the look of our app even more (see the formatting in the <a href="https://shinylive.io/py/examples/#regularization">Regularization app</a>). We can even write full on GAMES using Shiny (see the <a href="https://shinylive.io/py/examples/#wordle">Wordle App</a>). I highly recommend you explore both the <a href="">Examples</a> and the <a href="https://shiny.rstudio.com/py/docs/get-started.html">Docs</a> to learn more.</p>
 <p><a href="https://shiny.rstudio.com/articles/reactivity-overview.html">Here</a> is an article that talks more about reactive programming, and some of the things that you can do with it.</p>
 </section>
-<section id="sharing-your-app-with-shinys-serverless-deployment" class="level1" data-number="15">
-<h1 data-number="15"><span class="header-section-number">15</span> Sharing your App with Shiny’s Serverless Deployment</h1>
+<section id="sharing-your-app" class="level1" data-number="15">
+<h1 data-number="15"><span class="header-section-number">15</span> Sharing your App</h1>
 <p>Last but not least, I want to talk about something we’ve been using all along: Shiny for Python’s serverless development. The Shiny for Python Examples Website is built to use Web Assembly (wasm) and Pyodide so that your apps that you build can run <em>locally in the users browser</em> rather than running on a server. This means you can share apps without setting up or monitoring a server. Shiny for Python’s website will encode the entire app into a <em>URL</em> that you can share with others (it is a very long URL though…) When they open that URL, the website will open the app and any associated data and run it <em>locally</em> on the user’s computer. I use this all the time in my classes by sharing a URL on Canvas so that students can do a class activity in the Shiny App without me hosting it on a server.</p>
-<p><img src="Share.png" class="img-fluid"></p>
+<p><img src="/Images/Share.png" class="img-fluid"></p>
 <p>To share your app, Click the <code>Share</code> button at the top right corner of your page (right above the app). This will create two links: One to an <strong>Editor</strong> (which will open the app like we see it now, with the source code on the left and th app on the right) and one to an <strong>Application</strong> (which will open the app full screen in the browser). While the link is long, it’s all you need in order to share your app with others.</p>
 </section>
 
