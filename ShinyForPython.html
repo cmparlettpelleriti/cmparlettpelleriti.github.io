@@ -584,7 +584,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1 data-number="6"><span class="header-section-number">6</span> Adding to the Server Function</h1>
 <p>So, let’s go ahead and do that now! Since our plot is a type of output, we’re going to use the <code>@output</code> and <code>@render.plot()</code> decorators to tell the server that we’re telling it how to construct our iris plot. We’ll also finally need to load in our data so that our plot can actually plot somehting. Because we want this to happen only ONCE when we open the app, we’re going to load the data right after the import statements, not inside the ui or server portions of the code.</p>
 <p>When using Shiny for Python’s web interface, we’ll need to upload our <code>iris.csv</code> file so that the app can load in the data. You can do that by clicking the upload button next to all your file tabs.</p>
-<p><img src="/Images/Upload.png" class="img-fluid"></p>
+<p><img src="/images/Upload.png" class="img-fluid"></p>
 <p>We’re going to use <code>seaborn</code> to create a simple scatterplot of the Sepal Length’s and Sepal Widths in our data. Under our decorators we’re going to define a function that has the <em>same name</em> as the argument in our <code>output_plot()</code> (in this case, <code>iris</code>). The function should <strong>return</strong> our completed plot.</p>
 <div class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> shiny <span class="im">import</span> App, render, ui</span>
@@ -892,7 +892,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="sharing-your-app" class="level1" data-number="15">
 <h1 data-number="15"><span class="header-section-number">15</span> Sharing your App</h1>
 <p>Last but not least, I want to talk about something we’ve been using all along: Shiny for Python’s serverless development. The Shiny for Python Examples Website is built to use Web Assembly (wasm) and Pyodide so that your apps that you build can run <em>locally in the users browser</em> rather than running on a server. This means you can share apps without setting up or monitoring a server. Shiny for Python’s website will encode the entire app into a <em>URL</em> that you can share with others (it is a very long URL though…) When they open that URL, the website will open the app and any associated data and run it <em>locally</em> on the user’s computer. I use this all the time in my classes by sharing a URL on Canvas so that students can do a class activity in the Shiny App without me hosting it on a server.</p>
-<p><img src="/Images/Share.png" class="img-fluid"></p>
+<p><img src="/images/Share.png" class="img-fluid"></p>
 <p>To share your app, Click the <code>Share</code> button at the top right corner of your page (right above the app). This will create two links: One to an <strong>Editor</strong> (which will open the app like we see it now, with the source code on the left and th app on the right) and one to an <strong>Application</strong> (which will open the app full screen in the browser). While the link is long, it’s all you need in order to share your app with others.</p>
 </section>
 
