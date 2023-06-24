@@ -1,0 +1,64 @@
+---
+title: "Writing"
+author: "Chelsea Parlett"
+output: html_document
+---
+I write stuff. Check out my [Medium](https://medium.com/@chelseaparlett) page for links to all my online writing!
+
+## Computer Sciencey Stuff
+[Huffman Coding](Huffman.html)
+<br/>
+[Block Truncating Coding](BTC.html)
+<br/>
+[Discrete Cosine Transform](DCT.html)
+<br/>
+[Python for ML](https://healthstarinfo.com/blogs/2019/05/02/getting-to-know-the-python-packages-that-help-you-do-machine-learning.html)
+<br/>
+[Intro to HPC](https://healthstarinfo.com/blogs/2019/02/15/a-gentle-introduction-to-high-performance-computing.html)
+<br/>
+[Functions in R](https://www.dataquest.io/blog/r-functions-tutorial/)
+<br/>
+<br/>
+<br/>
+<br/>
+
+## Statsy Stuff
+[Crash Course Statistics](https://www.youtube.com/playlist?list=PL8dPuuaLjXtNM_Y-bUAhblSAdWRnmBUcr)
+<br/>
+[Accidental Chi-Square](AccidentialChiSq.html)
+<br/>
+[Node-Based Resilience Clustering](NBRC.html)
+<br/>
+[Q Statistics](QStatistic.html)
+<br/>
+[Dimensionality Reduction](https://healthstarinfo.com/blogs/2019/01/04/dimensionality-reduction.html)
+<br/>
+[Convolutional Neural Networks](https://healthstarinfo.com/blogs/2018/12/02/using-convolutional-neural-networks-to-model-spatially-related-data.html)
+<br/>
+[Neural Networks](https://healthstarinfo.com/blogs/2018/10/12/a-gentle-intorduction-to-feed-forward-neural-networks.html)
+<br/>
+[Hierarchical Agglomeretive Clustering](https://community.jmp.com/t5/JMP-Blog/Hierarchical-clustering/ba-p/192425)
+<br/>
+[K-means and Expectation Maximization](https://community.jmp.com/t5/JMP-Blog/Clustering-methods-for-unsupervised-machine-learning/ba-p/175053?utm_source=TWITTER&utm_medium=social_sprinklr&utm_content=2166691134&utm_campaign=td&linkId=64230508)
+<br/>
+[Confidence Intervals](https://community.jmp.com/t5/JMP-Blog/Be-more-confident-in-confidence-intervals/ba-p/65103)
+<br/>
+[MANOVAs pt I](https://medium.com/@chelseaparlett/manovas-multivariate-analysis-pt-i-71559674d36c)
+<br/>
+[MANOVAs pt II](https://medium.com/@chelseaparlett/manova-multivariate-analysis-pt-ii-c8d224c75adf)
+
+### \#GoodStatsBadAnalogies
+[Cohesion and Separation](CohandSep.html)
+<br/>
+<br/>
+
+## Silly Stuff
+[Everyone's a Little Bit Bayesian](https://medium.com/@chelseaparlett/everyones-a-little-bit-bayesian-f7f551cbe8af)
+<br/>
+[An Ode to Neural Networs and Their Layers](https://medium.com/@chelseaparlett/one-layer-two-layer-1a2c70e594)
+<br/>
+[A Limerick on p-values](https://medium.com/@chelseaparlett/a-limerick-on-p-values-46ac5208e073)
+<br/>
+[#StatsAsCats](https://twitter.com/search?q=%23StatsAsCAts&src=typd)
+<br/>
+<br/>

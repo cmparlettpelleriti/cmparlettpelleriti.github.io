@@ -1,0 +1,63 @@
+---
+title: "lsmeansVsReleveling"
+author: "Chelsea Parlett"
+date: "7/2/2019"
+output: html_document
+---
+
+```{r create}
+library(ggplot2)
+library(lsmeans)
+
+#--create data--------------------------------
+set.seed(123)
+
+Score = rnorm(900, 100, 45)
+
+dat <- data.frame(Score = Score,
+                  label = sort(rep(c("A","B","C"), 300)),
+                  sex = sample(rep(c("M","F"), 500),
+                                  900, replace = T)) #sex added as extra variable
+
+#---create relationships---
+dat[dat$label == "A" & dat$sex == "M", "Score"] <- dat[dat$label == "A" & dat$sex == "M", "Score"] + 10 #males in A do so well
+dat[dat$label == "A" & dat$sex == "F", "Score"] <- dat[dat$label == "A" & dat$sex == "F", "Score"] - 10 #females in A do so badly
+
+dat[dat$label == "C" & dat$sex == "M", "Score"] <- dat[dat$label == "C" & dat$sex == "M", "Score"] - 5 #males in C do so badly
+dat[dat$label == "C" & dat$sex == "F", "Score"] <- dat[dat$label == "C" & dat$sex == "F", "Score"] + 15 #females in C do so badly
+
+ggplot(dat, aes(x = label, y = Score)) + geom_boxplot() + facet_wrap(~sex)
+```
+
+## A as reference
+```{r A}
+m <- lm(Score~label * sex , data = dat)
+summary(m)
+
+ls <- lsmeans(m, pairwise ~ label * sex)
+ls
+```
+
+## B as reference
+```{r B}
+dat$label <- relevel(dat$label, "B")
+m2 <- lm(Score~label * sex, data = dat)
+summary(m2)
+
+ls2 <- lsmeans(m2, pairwise ~ label * sex)
+ls2
+```
+
+
+## C as reference
+```{r C}
+dat$label <- relevel(dat$label, "C")
+m3 <- lm(Score~label * sex, data = dat)
+summary(m3)
+
+ls3 <- lsmeans(m3, pairwise ~ label * sex)
+ls3
+```
+
+## Conclusions
+Based on this code, you can see that releveling and re-running the model will change the Coefficient Estimates, even the p-values. However, you can see (especially when you run `lsmeans()`) that it cannot fundementally change the relationships between the groups of the data.

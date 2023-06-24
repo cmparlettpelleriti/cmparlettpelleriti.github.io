@@ -1,0 +1,11 @@
+---
+title: "Modeling Brier Scores: A Beta Solution"
+author: "Chelsea Parlett"
+output: html_document
+---
+- [Slides for Talk](https://github.com/cmparlettpelleriti/TalkMaterials/blob/master/TalkMaterials/SCiP2021/Modeling%20Brier%20Scores%20in%20Behavioral%20Data_%20A%20Beta%20Solution.pdf)
+- [Stan Code for MetaMemory ZOIB](https://github.com/cmparlettpelleriti/TalkMaterials/blob/master/TalkMaterials/SCiP2021/simple_zoib.R)
+- [Stan Forum Post Leading to Multi-Inflated Beta Regression](https://discourse.mc-stan.org/t/ordinal-ish-model-setting-priors-and-pp-check/24591/8)
+- [Ordered Beta Regression](https://osf.io/preprints/socarxiv/2sx6y/)
+- [A Better Lemon Squeezer](https://pubmed.ncbi.nlm.nih.gov/16594767/)
+- [Solomon Kurz (suggested Multi Inflated Beta)](https://solomonkurz.netlify.app/)

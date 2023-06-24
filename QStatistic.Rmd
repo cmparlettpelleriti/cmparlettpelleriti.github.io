@@ -1,0 +1,41 @@
+---
+title: "What the **** is a Q Statistic"
+author: "Chelsea Parlett-Pelleriti"
+output: html_document
+---
+
+I recently had to brush up on my meta-analytic techniques. This included the Q statistic which measures the homogeneity of a group of studies. Writing helps me to remember these concepts (and gives me an index-able resource to scan through later), so here is a short explanation of a Q statistic.
+
+## When do we use a Q Statistic?
+Q statistics are used to measure study homogeneity in a meta-analysis. There are two main ways to think about a set of studies you're meta-analyzing:
+
+1. All the studies are capturing the *exact* same effect, so any difference you see between studies is due simply to random variation. We think we're drawing samples from the same "distribution" of effects over and over for each study.
+2. NOT all the studies are capturing the *exact* same effect. Differences between studies could still be due to random variation, but they could also be due to differences in the effect that each study is capturing. 
+
+1 is a fixed effect approach, and 2 is a random effects approach (the same kind of random effect we use when fitting mixed effect models #lmerForLyfe). The Q statistic is used to try to partition the variability we see between studies into variability that is due to random variation, and variability that is due to potential differences between the studies. This is really similar to the way we partition variance when doing an ANOVA. In fact, you'll see Sums of Squares pop up again. 
+
+Once we've calculated it, we can use Q to test the hypothesis that the studies in a meta-analysis are estimating the *same* effect size, or *different* effect sizes.
+
+## How do we calculate a Q Statistic?
+Q is a weighted Sum of Squared deviations. First we take effect size from each of *k* studies and subtract the mean (meta-analytic) effect size. We then square each of these deviations. So far this looks exactly like a regular Sums of Squares formula:
+
+$$\sum_{i=1}^k (Y_i - M)^2$$
+
+We then weight the squared deviation by the inverse of its variance. This is just a fancy way of saying we divide by the variance from each study.
+
+$$Q= \sum_{i=1}^k \frac{1}{V_i}(Y_i - M)^2$$
+
+## Testing Q and Homogeneity
+We can test whether the difference we see between studies is reasonable under the assumption that they're all estimating the exact same effect size. 
+
+$H_0$ is that the studies are estimating the same effect size,
+$H_A$ is that the studies are estimating different effect sizes.
+
+Under $H_0$ we expect that the only variation we're observing is from random variation. Since we divided each deviation by the variance for its study, the expected Q for our group of studies is the degrees of freedom, k-1, but of course we don't expect Q to be *exactly df*, there will be some random variation (it's everywhere, isn't it?). If Q is *extreme* compared to what we'd expect from a world where the true Q is df, we reject the null that the studies are estimating the same effect size (i.e. that they're homogenous).
+
+## Concluding Remarks
+Q is a way of comparing the variability between the effect sizes of studies with the amount of variation we expect studies to have when they estimate the same effect. If Q is a lot larger than what we expect under the null, we conclude it's likely the studies in the meta-analysis are not estimating the exact same effect size.
+
+
+## References
+[Introduction to Meta-Analysis](https://www.meta-analysis-workshops.com/download/bookChapterSample.pdf)

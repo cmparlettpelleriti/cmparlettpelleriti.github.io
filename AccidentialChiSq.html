@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Chelsea Parlett" />
+
+
+<title>Accidental ChiSq</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Chelsea Parlett Pelleriti</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="writing.html">Writing</a>
+</li>
+<li>
+  <a href="coding.html">Coding</a>
+</li>
+<li>
+  <a href="teaching.html">Teaching</a>
+</li>
+<li>
+  <a href="research.html">Research</a>
+</li>
+<li>
+  <a href="TheChatistician.html">The Chatistician</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="contact.html">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="http://github.com/cmparlettpelleriti">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://twitter.com/ChelseaParlett">
+    <span class="fa fa-twitter fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://www.linkedin.com/in/chelseaparlettpelleriti/">
+    <span class="fa fa-linkedin fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Accidental ChiSq</h1>
+<h4 class="author"><em>Chelsea Parlett</em></h4>
+
+</div>
+
+
+<p><br/> <img src="images/ifailedyou.jpg" style="width:50%; border:10px solid; margin-right: 20px" align="left"> <br/></p>
+<p>One of my students ran a chi-square test with a continuous (but integer) outcome and categorical predictor. They emailed me worried about the warning “In chisq.test(t) : Chi-squared approximation may be incorrect”. I told them they should run an ANOVA instead since their outcome was continuous (yes, there may be concerns because the data is integer/count data. A poisson model may have been better, but we didn’t cover those in the class.) Their response to me was something along the lines of:</p>
+<blockquote>
+<p>Oh don’t worry, the chi-square code still ran so it’s fine.</p>
+</blockquote>
+<p>Which made me feel like I failed them, since they didn’t learn from me that it’s not <em>whether</em> the code ran, but <em>whether</em> you used an appropriate test.</p>
+<p>So, to make up for it for future students, I wrote this. See this simulation that shows why running a chi-square test when you should have run an ANOVA is not a good idea.</p>
+<div id="null-case" class="section level1">
+<h1>Null Case</h1>
+<div id="simulation-function" class="section level2">
+<h2>Simulation Function</h2>
+<pre class="r"><code>library(ggplot2)</code></pre>
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 3.4.4</code></pre>
+<pre class="r"><code>CHIANOVA &lt;- function(ngroups = 5, pergroup = 12, plot = F){
+  intDat &lt;- round(runif((ngroups*pergroup),1,100))
+  catDat &lt;- factor(rep(1:ngroups,(60/5)))
+  
+  df &lt;- data.frame(intDat,catDat)
+  t &lt;- xtabs(~intDat + catDat, data = df)
+  ch &lt;- chisq.test(t)
+  
+  m &lt;- aov(intDat ~ catDat, data = df)
+  sm &lt;- summary(m)
+    if (plot){
+    print(ggplot(df, aes(x = catDat, y = intDat)) + geom_boxplot(aes(fill = catDat)) + theme_classic())
+  }
+  return(list(chi = ch$p.value, anov = sm[[1]][[&quot;Pr(&gt;F)&quot;]][1]))
+}</code></pre>
+</div>
+<div id="example-of-simulation-run" class="section level2">
+<h2>Example of Simulation Run</h2>
+<pre class="r"><code>examp &lt;- CHIANOVA(plot = T)</code></pre>
+<p><img src="AccidentialChiSq_files/figure-html/ex-1.png" width="672" /> ## Running the Simulation</p>
+<pre class="r"><code>set.seed(123)
+n &lt;- 1000
+ca &lt;- data.frame(chi = 0, anov = 0)
+for (i in 1:n){
+  k &lt;- CHIANOVA()
+  ca &lt;- rbind(ca,k)
+}
+
+ca &lt;- ca[2:dim(ca)[1],]
+head(ca)</code></pre>
+<pre><code>##         chi       anov
+## 2 0.2752663 0.94383179
+## 3 0.5824732 0.35307383
+## 4 0.5427126 0.54559270
+## 5 0.1378418 0.68759501
+## 6 0.6919098 0.09748467
+## 7 0.4859818 0.50135175</code></pre>
+</div>
+<div id="plots" class="section level2">
+<h2>Plots</h2>
+<pre class="r"><code>ggplot(ca,aes(x = chi, y = anov)) + geom_point() + geom_smooth(method = &quot;lm&quot;)</code></pre>
+<p><img src="AccidentialChiSq_files/figure-html/plotting-1.png" width="672" /></p>
+<pre class="r"><code>cor(ca)</code></pre>
+<pre><code>##             chi       anov
+## chi  1.00000000 0.09304987
+## anov 0.09304987 1.00000000</code></pre>
+<pre class="r"><code>chi_aov &lt;- lm(anov~chi, data = ca)
+summary(chi_aov)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = anov ~ chi, data = ca)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.52535 -0.24430  0.00169  0.23500  0.55619 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  0.40517    0.03042  13.319  &lt; 2e-16 ***
+## chi          0.19682    0.06666   2.952  0.00323 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.2829 on 998 degrees of freedom
+## Multiple R-squared:  0.008658,   Adjusted R-squared:  0.007665 
+## F-statistic: 8.716 on 1 and 998 DF,  p-value: 0.003227</code></pre>
+</div>
+<div id="density-plots-of-p-values" class="section level2">
+<h2>Density Plots of p-values</h2>
+<pre class="r"><code>#distribution of p-values density, makes sense that the p-values for anova are skewed because there&#39;s a clear effect.
+ggplot(ca,aes(x = chi)) + geom_density()</code></pre>
+<p><img src="AccidentialChiSq_files/figure-html/densityplots-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(ca,aes(x = anov)) + geom_density()</code></pre>
+<p><img src="AccidentialChiSq_files/figure-html/densityplots-2.png" width="672" /></p>
+<pre class="r"><code>ggplot(ca) + geom_density(aes(x = chi)) + geom_density(aes(x = anov))</code></pre>
+<p><img src="AccidentialChiSq_files/figure-html/densityplots-3.png" width="672" /></p>
+<p>The density plot of the anova p-values is relatively flat, which is expected given a null effect. The density plot for the chi-square p-values is not flat, with a peak around 0.5. ## What did we learn?</p>
+<p>In our simulation, there is a small positive correlation between the p-values you get when you run an ANOVA and chi-square test on data that has a continuous but integer outcome, and a categorical predictor when the null is TRUE.</p>
+<p>However, the adjusted <span class="math inline">\(R^2\)</span> value is incredibly low at ~ 0.009, indicating that knowing the p-value of the chi-square test on the data does not explain much of the variation in the p-value of the ANOVA test on the same data.</p>
+<p>In layman’s terms, there’s not a strong relationship between the p-values you get with the two different tests. This makes sense since when you run a chi-square test, you treat your continuous/integer value as a categorical variable. Which is is not.</p>
+</div>
+</div>
+<div id="alternative-case" class="section level1">
+<h1>Alternative Case</h1>
+<div id="simulation-function-1" class="section level2">
+<h2>Simulation Function</h2>
+<pre class="r"><code>CHIANOVA2 &lt;- function(ngroups = 5, pergroup = 12, plot = F){
+  intDat &lt;- round(runif((ngroups*pergroup),1,100))
+  catDat &lt;- factor(rep(1:ngroups,(60/5)))
+
+  
+  df &lt;- data.frame(intDat,catDat)
+  
+  #creating a relationship
+  df[df$catDat == 1, &quot;intDat&quot;] &lt;- df[df$catDat == 1,&quot;intDat&quot;] -5
+  df[df$catDat == 2,&quot;intDat&quot;] &lt;- df[df$catDat == 2,&quot;intDat&quot;] -25
+  df[df$catDat == 3,&quot;intDat&quot;] &lt;- df[df$catDat == 3,&quot;intDat&quot;] + 20 
+  df[df$catDat == 4,&quot;intDat&quot;] &lt;- df[df$catDat == 4,&quot;intDat&quot;] + 2
+  
+  t &lt;- xtabs(~intDat + catDat, data = df)
+  ch &lt;- chisq.test(t)
+  
+  m &lt;- aov(intDat ~ catDat, data = df)
+  sm &lt;- summary(m)
+  if (plot){
+    print(ggplot(df, aes(x = catDat, y = intDat)) + geom_boxplot(aes(fill = catDat)) + theme_classic())
+  }
+  return(list(chi = ch$p.value, anov = sm[[1]][[&quot;Pr(&gt;F)&quot;]][1]))
+}</code></pre>
+</div>
+<div id="example-of-simulation-run-1" class="section level2">
+<h2>Example of Simulation Run</h2>
+<pre class="r"><code>examp &lt;- CHIANOVA2(plot = T)</code></pre>
+<p><img src="AccidentialChiSq_files/figure-html/ex2-1.png" width="672" /></p>
+</div>
+<div id="running-the-simulation" class="section level2">
+<h2>Running the Simulation</h2>
+<pre class="r"><code>set.seed(123)
+n &lt;- 1000
+ca &lt;- data.frame(chi = 0, anov = 0)
+for (i in 1:n){
+  k &lt;- CHIANOVA2()
+  ca &lt;- rbind(ca,k)
+}
+
+ca &lt;- ca[2:dim(ca)[1],]
+head(ca)</code></pre>
+<pre><code>##         chi         anov
+## 2 0.2337785 4.776362e-03
+## 3 0.5912555 4.387574e-03
+## 4 0.4899230 5.786586e-03
+## 5 0.1987483 6.079448e-05
+## 6 0.4671540 2.377428e-03
+## 7 0.5736945 4.157098e-02</code></pre>
+</div>
+<div id="plots-1" class="section level2">
+<h2>Plots</h2>
+<pre class="r"><code>ggplot(ca,aes(x = chi, y = anov)) + geom_point() + geom_smooth(method = &quot;lm&quot;)</code></pre>
+<p><img src="AccidentialChiSq_files/figure-html/plotting2-1.png" width="672" /></p>
+<pre class="r"><code>cor(ca)</code></pre>
+<pre><code>##             chi       anov
+## chi  1.00000000 0.04989023
+## anov 0.04989023 1.00000000</code></pre>
+<pre class="r"><code>chi_aov &lt;- lm(anov~chi, data = ca)
+summary(chi_aov)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = anov ~ chi, data = ca)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.03191 -0.02370 -0.01939 -0.00720  0.61377 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)  
+## (Intercept) 0.014516   0.006365   2.281   0.0228 *
+## chi         0.024775   0.015700   1.578   0.1149  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.06304 on 998 degrees of freedom
+## Multiple R-squared:  0.002489,   Adjusted R-squared:  0.00149 
+## F-statistic:  2.49 on 1 and 998 DF,  p-value: 0.1149</code></pre>
+<pre class="r"><code>#distribution of p-values density, makes sense that the p-values for anova are skewed because there&#39;s a clear effect.
+ggplot(ca,aes(x = chi)) + geom_density()</code></pre>
+<p><img src="AccidentialChiSq_files/figure-html/testing2-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(ca,aes(x = anov)) + geom_density()</code></pre>
+<p><img src="AccidentialChiSq_files/figure-html/testing2-2.png" width="672" /></p>
+<pre class="r"><code>ggplot(ca) + geom_density(aes(x = chi)) + geom_density(aes(x = anov))</code></pre>
+<p><img src="AccidentialChiSq_files/figure-html/testing2-3.png" width="672" /></p>
+<pre class="r"><code>#distribution of p-values density, makes sense that the p-values for anova are skewed because there&#39;s a clear effect.
+ggplot(ca,aes(x = chi)) + geom_density()</code></pre>
+<p><img src="AccidentialChiSq_files/figure-html/densityplots2-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(ca,aes(x = anov)) + geom_density()</code></pre>
+<p><img src="AccidentialChiSq_files/figure-html/densityplots2-2.png" width="672" /> ## What did we learn?</p>
+<p>Again, there is a small positive correlation between the p-values you get when you run an ANOVA and chi-square test on data that has a continuous but integer outcome, and a categorical predictor when the null is FALSE.</p>
+<p>We get a small adjusted <span class="math inline">\(R^2\)</span> value here as well of ~ 0.002.</p>
+<p>From our simulation here, it looks like regardless of the relationship between our two variables, running a chi-square test and an ANOVA will give you virtually unrelated p-values.</p>
+</div>
+</div>
+<div id="conclusion" class="section level1">
+<h1>Conclusion</h1>
+<p>Don’t run a chi-square test when you should run an ANOVA, even if the code runs in R.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

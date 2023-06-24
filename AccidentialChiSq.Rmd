@@ -1,0 +1,168 @@
+---
+title: "Accidental ChiSq"
+author: "Chelsea Parlett"
+output: html_document
+---
+
+<br/>
+<img src="images/ifailedyou.jpg" style="width:50%; border:10px solid; margin-right: 20px" align="left">
+<br/>
+
+One of my students ran a chi-square test with a continuous (but integer) outcome and categorical predictor. They emailed me worried about the warning "In chisq.test(t) : Chi-squared approximation may be incorrect". I told them they should run an ANOVA instead since their outcome was continuous (yes, there may be concerns because the data is integer/count data. A poisson model may have been better, but we didn't cover those in the class.) Their response to me was something along the lines of:
+
+> Oh don't worry, the chi-square code still ran so it's fine.
+
+Which made me feel like I failed them, since they didn't learn from me that it's not *whether* the code ran, but *whether* you used an appropriate test.
+
+So, to make up for it for future students, I wrote this. See this simulation that shows why running a chi-square test when you should have run an ANOVA is not a good idea.
+
+# Null Case
+## Simulation Function
+```{r setup}
+library(ggplot2)
+
+CHIANOVA <- function(ngroups = 5, pergroup = 12, plot = F){
+  intDat <- round(runif((ngroups*pergroup),1,100))
+  catDat <- factor(rep(1:ngroups,(60/5)))
+  
+  df <- data.frame(intDat,catDat)
+  t <- xtabs(~intDat + catDat, data = df)
+  ch <- chisq.test(t)
+  
+  m <- aov(intDat ~ catDat, data = df)
+  sm <- summary(m)
+    if (plot){
+    print(ggplot(df, aes(x = catDat, y = intDat)) + geom_boxplot(aes(fill = catDat)) + theme_classic())
+  }
+  return(list(chi = ch$p.value, anov = sm[[1]][["Pr(>F)"]][1]))
+}
+```
+## Example of Simulation Run
+```{r ex, message = FALSE, warning= F}
+examp <- CHIANOVA(plot = T)
+```
+## Running the Simulation
+```{r runsim, message = FALSE, warning = F}
+set.seed(123)
+n <- 1000
+ca <- data.frame(chi = 0, anov = 0)
+for (i in 1:n){
+  k <- CHIANOVA()
+  ca <- rbind(ca,k)
+}
+
+ca <- ca[2:dim(ca)[1],]
+head(ca)
+```
+
+## Plots
+```{r plotting}
+ggplot(ca,aes(x = chi, y = anov)) + geom_point() + geom_smooth(method = "lm")
+cor(ca)
+
+
+```
+
+```{r testing}
+chi_aov <- lm(anov~chi, data = ca)
+summary(chi_aov)
+
+```
+
+## Density Plots of p-values
+```{r densityplots}
+#distribution of p-values density, makes sense that the p-values for anova are skewed because there's a clear effect.
+ggplot(ca,aes(x = chi)) + geom_density()
+ggplot(ca,aes(x = anov)) + geom_density()
+
+ggplot(ca) + geom_density(aes(x = chi)) + geom_density(aes(x = anov))
+```
+
+The density plot of the anova p-values is relatively flat, which is expected given a null effect. The density plot for the chi-square p-values is not flat, with a peak around 0.5.
+## What did we learn?
+
+In our simulation, there is a small positive correlation between the p-values you get when you run an ANOVA and chi-square test on data that has a continuous but integer outcome, and a categorical predictor when the null is TRUE.
+
+However, the adjusted $R^2$ value is incredibly low at ~ 0.009, indicating that knowing the p-value of the chi-square test on the data does not explain much of the variation in the p-value of the ANOVA test on the same data. 
+
+In layman's terms, there's not a strong relationship between the p-values you get with the two different tests. This makes sense since when you run a chi-square test, you treat your continuous/integer value as a categorical variable. Which is is not.
+
+# Alternative Case
+## Simulation Function
+```{r setup2}
+CHIANOVA2 <- function(ngroups = 5, pergroup = 12, plot = F){
+  intDat <- round(runif((ngroups*pergroup),1,100))
+  catDat <- factor(rep(1:ngroups,(60/5)))
+
+  
+  df <- data.frame(intDat,catDat)
+  
+  #creating a relationship
+  df[df$catDat == 1, "intDat"] <- df[df$catDat == 1,"intDat"] -5
+  df[df$catDat == 2,"intDat"] <- df[df$catDat == 2,"intDat"] -25
+  df[df$catDat == 3,"intDat"] <- df[df$catDat == 3,"intDat"] + 20 
+  df[df$catDat == 4,"intDat"] <- df[df$catDat == 4,"intDat"] + 2
+  
+  t <- xtabs(~intDat + catDat, data = df)
+  ch <- chisq.test(t)
+  
+  m <- aov(intDat ~ catDat, data = df)
+  sm <- summary(m)
+  if (plot){
+    print(ggplot(df, aes(x = catDat, y = intDat)) + geom_boxplot(aes(fill = catDat)) + theme_classic())
+  }
+  return(list(chi = ch$p.value, anov = sm[[1]][["Pr(>F)"]][1]))
+}
+```
+
+## Example of Simulation Run
+```{r ex2, message = FALSE, warning= F}
+examp <- CHIANOVA2(plot = T)
+```
+
+## Running the Simulation
+```{r runsim2, message = FALSE, warning = F}
+set.seed(123)
+n <- 1000
+ca <- data.frame(chi = 0, anov = 0)
+for (i in 1:n){
+  k <- CHIANOVA2()
+  ca <- rbind(ca,k)
+}
+
+ca <- ca[2:dim(ca)[1],]
+head(ca)
+```
+
+## Plots
+```{r plotting2}
+ggplot(ca,aes(x = chi, y = anov)) + geom_point() + geom_smooth(method = "lm")
+cor(ca)
+```
+
+```{r testing2}
+chi_aov <- lm(anov~chi, data = ca)
+summary(chi_aov)
+
+
+#distribution of p-values density, makes sense that the p-values for anova are skewed because there's a clear effect.
+ggplot(ca,aes(x = chi)) + geom_density()
+ggplot(ca,aes(x = anov)) + geom_density()
+ggplot(ca) + geom_density(aes(x = chi)) + geom_density(aes(x = anov))
+```
+```{r densityplots2}
+#distribution of p-values density, makes sense that the p-values for anova are skewed because there's a clear effect.
+ggplot(ca,aes(x = chi)) + geom_density()
+ggplot(ca,aes(x = anov)) + geom_density()
+```
+## What did we learn?
+
+Again, there is a small positive correlation between the p-values you get when you run an ANOVA and chi-square test on data that has a continuous but integer outcome, and a categorical predictor when the null is FALSE.
+
+We get a small adjusted $R^2$ value here as well of ~ 0.002. 
+
+From our simulation here, it looks like regardless of the relationship between our two variables, running a chi-square test and an ANOVA will give you virtually unrelated p-values.
+
+# Conclusion
+
+Don't run a chi-square test when you should run an ANOVA, even if the code runs in R.

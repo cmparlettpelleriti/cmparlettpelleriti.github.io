@@ -1,0 +1,39 @@
+---
+title: "Bayesian Statistics The Fun Way: Review"
+author: "Chelsea Parlett"
+output: html_document
+---
+
+Recently--well recently in the book publishing world--I got the opportunity to be the technical reviewer for my friend [Will Kurt's](https://www.countbayesie.com/) new book [Bayesian Statistics The Fun Way](https://nostarch.com/learnbayes).
+
+I was honored to tech review this book. I've spent a lot of time with this text, and now I wanted to tell YOU why you should read this book.
+
+
+Here are the 2 main points I'm going to make:
+
+1) this book doesn't assume you have any statistical (theory or R) expertise
+2) this book explores important and intuitive ideas about what it means to use the Bayesian framework
+
+
+## No Background Needed
+
+Anyone can appreciate the ideas in this book. You need at most some algebra skills and a willingness to learn "Enough Calculus To Get By" (which is the title of the second appendix in the book.) 
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Would like to thank <a href="https://twitter.com/willkurt?ref_src=twsrc%5Etfw">@willkurt</a> for deliberately laying out how to read probability notation, step by step, in <a href="https://twitter.com/hashtag/BayesTheFunWay?src=hash&amp;ref_src=twsrc%5Etfw">#BayesTheFunWay</a>.<br><br>It REALLY helps people like me who took years-long breaks in adulthood between math and probability coursework and need some refreshing.💡🦆 <a href="https://t.co/izc84hjmzK">pic.twitter.com/izc84hjmzK</a></p>&mdash; Audrey Olson (@primalkitchen) <a href="https://twitter.com/primalkitchen/status/1164625425513025537?ref_src=twsrc%5Etfw">August 22, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+Will will walk you through all the basic ideas you need to understand the Bayesian Framework. From how to read probability notation, to how to interpret Bayes Factors, no prior experience is necessary. This is one thing that sets Will’s book apart from other Bayes Books. Bayesian statistics is often taught as an “advanced” version or an alternative framework to the Frequentist statistics taught in most introductory courses. It’s presented as a topic for those already well versed in calculus, probability theory, and hypothesis testing. It’s rare to find a text that will take you through Bayesian reasoning from the very beginning, but that’s exactly what Bayesian Statistics the Fun Way does.
+
+
+## Important Ideas
+
+This book is not here to teach you about conjugate priors, hierarchical models, or diagnosing convergence problems in STAN. It’s here to teach you to think like a Bayesian and gain an intuitive understanding of how we use Bayesian ideas to make decisions about our world. Even if you never plan to run a Bayesian model, you’ll learn something important from this book: a framework for incorporating new information into our beliefs about the world.
+
+Bayesian methods may not be the perfect representation for how humans think about the world, by Will makes a convincing case for how they can still be used to understand the world around us. You will see how Bayesian principles can be used to show why some people believe in ESP without much evidence, or why someone’s beliefs might seem to get even stronger in the face of conflicting evidence.
+
+
+## Conclusion
+
+Whether you’re a die-hard statistics fan or someone who has not once dabbled in the field, this book is for you. Will clearly and effectively communicates the concepts and ideas that make Bayesian Statistics great. This book does not set up Bayesian Stats as a foil or extension of Frequentism, but rather treats it as the foundation on which Statistical Thinking can be built. With practical examples and intuitive explanations, Bayesian Statistics the Fun Way somehow combines both rigor and clarity. I highly recommend you check it out!
+
+
