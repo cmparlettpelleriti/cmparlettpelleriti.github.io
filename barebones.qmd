@@ -1,0 +1,1663 @@
+---
+title: "Bare Bones Model Examples"
+author: Dr. Chelsea Parlett-Pelleriti
+format:
+    html:
+        toc: true
+        number-sections: true
+        colorlinks: true
+        number-depth: 3
+jupyter: python3
+---
+# Overview
+The following sections provide annotated bare-bones examples of how to run each algorithm we learn in class. This only includes data loading, pre-procesing, model building, and basic model evaluation and **does not** include all the extras we learn in class (like plotting, hyper-parameter tuning..etc)/
+
+# Supervised Machine Learning
+In supervised ML the general workflow is:
+
+- Create X and y (includes pre-processing, model validation...etc)
+- Create empty model
+- .fit() 
+- .predict()
+- Evaluate
+
+## Regression (Continuous Outcome)
+
+<details>
+<summary>Linear Regression (No Model Validation)</summary>
+
+#### Loading and Pre-Processing
+First, we need to import our packages and load in our data.
+```{python}
+# doesn't show warnings so that we can have blissful ignorance
+import warnings
+warnings.filterwarnings('ignore')
+
+# base packages
+import pandas as pd
+import numpy as np
+from plotnine import *
+
+# modelling imports
+from sklearn.linear_model import LinearRegression # Linear Regression Model
+from sklearn.preprocessing import StandardScaler, LabelBinarizer #Z-score variables, binary
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score #model evaluation
+
+```
+
+```{python}
+ama = pd.read_csv("https://raw.githubusercontent.com/cmparlettpelleriti/CPSC392ParlettPelleriti/master/Data/amazon-books.txt",
+                 sep = "\t") #file is tsv not csv, so sep = "\t"
+
+# ama.head()
+```
+
+Now we want to do any pre-processing we need. Here we'll check the number of missing values to see if we need to drop any.
+
+
+```{python}
+# check null
+print(ama.isnull().sum()) # check if too many are missing
+print(ama.shape) # how many rows, cols to we have?
+```
+
+There aren't many missing values here, compared to the number of rows, so I feel comfortable dropping any row that's missing a value. So let's do that.
+
+```{python}
+# drop missing
+ama = ama.dropna() # drop missing rows
+ama = ama.reset_index() # reset indices
+```
+
+Here we drop missing values, and reset the indices. `dropna()` will by default drop any row that's missing a value. Say we have 5 rows, and our row indices are 0,1,2,3 and 4. If row 2 has a missing value, `dropna()` will drop it. But now our indices are weird, because it goes 0,1,3,4 instead of 0,1,2,3. `reset_index()` will take our data and make sure there are no skipped indices.
+
+Now we can prepare to build our model by separating the data into predictors (inputs to the model) and an outcome (the output of the model; what it's predicting). We'll also turn `Hard/ Paper` into a binary (0/1) variable so that our model can process it.
+
+```{python}
+# set up X and y
+predictors = ["List Price", "NumPages",
+              "Weight (oz)", "Thick",
+              "Height", "Width", "Hard/ Paper"] # specify predictor vars
+
+X = ama[predictors] # predictors/input
+y = ama["Amazon Price"] # outcome/output
+
+# binary
+b = LabelBinarizer()
+X["Hard/ Paper"] = b.fit_transform(X["Hard/ Paper"])
+```
+
+Then, we'll z-score our inputs. All our predictors except `Hard/ Paper` are continuous, so we'll z-score all of them except `Hard/ Paper`. 
+
+```{python}
+continuous = ["List Price", "NumPages",
+              "Weight (oz)", "Thick",
+              "Height", "Width"] # specify continuous vars
+# z score
+z = StandardScaler() # create empty z-score object
+
+z.fit(X[continuous]) # z score all predictors that are continuous/interval
+X[continuous] = z.transform(X[continuous]) # z score all predictors that are continuous/interval
+```
+
+#### Build and Fit the Model
+Now, we're ready to build the model. First, we create an empty model, and then we fit it. Fitting allows the empty model to use the data we give it (here `X` and `y`) to figure out what the parameters of the model should be. Here the parameters are the intercept and coefficient of the model.
+
+```{python}
+# create model
+LR_Model = LinearRegression() # empty model
+
+# fit model
+LR_Model.fit(X, y) # fit model (aka learn the model parameters)
+```
+
+#### Evaluate the Model
+
+Now that we have a fitted model, we need to check how well it performs. For a continuous outcome, we often check the Mean Squared Error (MSE), Mean Absolute Error (MAE) and R-sqaured (R2) values.
+
+All three of these metrics compare the *actual* outcomes (here, Amazon Price) with what the model *predicts* the outcome will be. So first, we generate predictions for our dataset, then we use these predictions and the actual values (in `y`) to calculate these three metrics.
+
+```{python}
+# predict
+price_pred = LR_Model.predict(X) # make predictions for data in X
+
+# mse and mae
+print("MSE: ", mean_squared_error(y,price_pred))
+print("MAE: ", mean_absolute_error(y,price_pred))
+
+# r2
+print("R2 : ", r2_score(y,price_pred))
+```
+</details> 
+
+
+<details>
+<summary>Linear Regression</summary>
+
+<section>
+
+#### Loading and Pre-Processing
+First, we need to import our packages and load in our data.
+```{python}
+# doesn't show warnings so that we can have blissful ignorance
+import warnings
+warnings.filterwarnings('ignore')
+
+# base packages
+import pandas as pd
+import numpy as np
+from plotnine import *
+
+# modelling imports
+from sklearn.linear_model import LinearRegression # Linear Regression Model
+from sklearn.preprocessing import StandardScaler, LabelBinarizer #Z-score variables, binary
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score #model evaluation
+
+from sklearn.model_selection import train_test_split # simple TT split cv
+from sklearn.model_selection import KFold # k-fold cv
+
+```
+
+```{python}
+ama = pd.read_csv("https://raw.githubusercontent.com/cmparlettpelleriti/CPSC392ParlettPelleriti/master/Data/amazon-books.txt",
+                 sep = "\t") #file is tsv not csv, so sep = "\t"
+
+# ama.head()
+```
+
+Now we want to do any pre-processing we need. Here we'll check the number of missing values to see if we need to drop any.
+
+
+```{python}
+# check null
+print(ama.isnull().sum()) # check if too many are missing
+print(ama.shape) # how many rows, cols to we have?
+```
+
+There aren't many missing values here, compared to the number of rows, so I feel comfortable dropping any row that's missing a value. So let's do that.
+
+```{python}
+# drop missing
+ama = ama.dropna() # drop missing rows
+ama = ama.reset_index() # reset indices
+```
+
+Here we drop missing values, and reset the indices. `dropna()` will by default drop any row that's missing a value. Say we have 5 rows, and our row indices are 0,1,2,3 and 4. If row 2 has a missing value, `dropna()` will drop it. But now our indices are weird, because it goes 0,1,3,4 instead of 0,1,2,3. `reset_index()` will take our data and make sure there are no skipped indices.
+
+Now we can prepare to build our model by separating the data into predictors (inputs to the model) and an outcome (the output of the model; what it's predicting). We'll also turn `Hard/ Paper` into a binary (0/1) variable so that our model can process it.
+
+```{python}
+# set up X and y
+predictors = ["List Price", "NumPages",
+              "Weight (oz)", "Thick",
+              "Height", "Width", "Hard/ Paper"] # specify predictor vars
+
+X = ama[predictors] # predictors/input
+y = ama["Amazon Price"] # outcome/output
+
+# binary
+b = LabelBinarizer()
+X["Hard/ Paper"] = b.fit_transform(X["Hard/ Paper"])
+```
+
+Next, we need to separate our data into a *training* and *testing* set. The train set will be used to fit the model, and the test set will be used to help us understand how the model performs on data it has never seen before. We are VERY careful to make sure that no information from the test set leaks into the model.
+
+:::panel-tabset
+
+### Train Test Split
+
+```{python}
+X_test, X_train, y_test, y_train = train_test_split(X,y, test_size = 0.2) #80/20 TTS
+```
+
+Then, we'll z-score our inputs. All our predictors except `Hard/ Paper` are continuous, so we'll z-score all of them except `Hard/ Paper`.
+
+```{python}
+continuous =  ["List Price", "NumPages",
+              "Weight (oz)", "Thick",
+              "Height", "Width"] # specify continuous vars
+# z score
+z = StandardScaler() # create empty z-score object
+
+z.fit(X_train[continuous]) # all predictors are continuous/interval
+X_train[continuous] = z.transform(X_train[continuous]) # all predictors are continuous/interval
+X_test[continuous] = z.transform(X_test[continuous]) # all predictors are continuous/interval
+```
+
+#### Build and Fit the Model
+Now, we're ready to build the model. First, we create an empty model, and then we fit it. Fitting allows the empty model to use the data we give it (here `X` and `y`) to figure out what the parameters of the model should be. Here the parameters are the intercept and coefficient of the model.
+
+```{python}
+# create model
+LR_Model = LinearRegression() # empty model
+
+# fit model
+LR_Model.fit(X_train, y_train) # fit model (aka learn the model parameters)
+```
+
+#### Evaluate the Model
+
+Now that we have a fitted model, we need to check how well it performs. For a continuous outcome, we often check the Mean Squared Error (MSE), Mean Absolute Error (MAE) and R-sqaured (R2) values.
+
+All three of these metrics compare the *actual* outcomes (here, Amazon Price) with what the model *predicts* the outcome will be. So first, we generate predictions for our dataset, then we use these predictions and the actual values (in `y`) to calculate these three metrics. We'll do this for both the train and the test set.
+
+```{python}
+# predict
+price_pred_train = LR_Model.predict(X_train) # make predictions for data in X
+
+# mse and mae
+print("Train MSE: ", mean_squared_error(y_train,price_pred_train))
+print("Train MAE: ", mean_absolute_error(y_train,price_pred_train))
+
+# r2
+print("Train R2 : ", r2_score(y_train,price_pred_train))
+
+# predict
+price_pred_test = LR_Model.predict(X_test) # make predictions for data in X
+
+# mse and mae
+print("Test MSE : ", mean_squared_error(y_test,price_pred_test))
+print("Test MAE : ", mean_absolute_error(y_test,price_pred_test))
+
+# r2
+print("Test R2  : ", r2_score(y_test,price_pred_test))
+```
+
+
+
+### K-Fold
+
+To use KFold, we need to create a `for` loop which repeats our code `K` times (here, `K` is 5, for 5-Fold CV). The variables `train` and `test` contain the indices of the rows that should be in the train and test sets, respectively. Each time our for loop iterates, we will grab the rows in `X` that should be in the training set and put them in `X_train`, we will grab the rows in `X` that should be in the testing set and put them in `X_test`, we will grab the rows in `y` that should be in the training set and put them in `y_train`, and we will grab the rows in `y` that should be in the testing set and put them in `y_test`.
+
+Then, we'll z-score our inputs. All our predictors except `Hard/ Paper` are continuous, so we'll z-score all of them except `Hard/ Paper`.
+
+#### Model Building and Evaluation 
+Now, we're ready to build the model. First, we create an empty model, and then we fit it. Fitting allows the empty model to use the data we give it (here `X` and `y`) to figure out what the parameters of the model should be. Here the parameters are the intercept and coefficient of the model.
+
+Now that we have a fitted model, we need to check how well it performs. For a continuous outcome, we often check the Mean Squared Error (MSE), Mean Absolute Error (MAE) and R-squared (R2) values. Because we're doing K-Fold CV, we'll have K different MSEs, MAEs, and R2s for the train/test set. So, we store all K of them in lists (`mae_train`, `mae_test`...etc).
+
+All three of these metrics compare the *actual* outcomes (here, Amazon Price) with what the model *predicts* the outcome will be. So first, we generate predictions for our dataset, then we use these predictions and the actual values (in `y`) to calculate these three metrics. We'll do this for both the train and the test set.
+
+
+```{python}
+kf = KFold(5) # 5-Fold CV
+
+mse_train = []
+mse_test  = []
+mae_train = []
+mae_test  = []
+r2_train   = []
+r2_test    = []
+
+continuous =  ["List Price", "NumPages",
+              "Weight (oz)", "Thick",
+              "Height", "Width"] # specify continuous vars
+
+for train,test in kf.split(X):
+    
+    # split into train/test
+    X_train = X.iloc[train]
+    X_test = X.iloc[test]
+    y_train = y[train]
+    y_test = y[test]
+    
+    # z score
+    z = StandardScaler() # create empty z-score object
+
+    z.fit(X_train[continuous]) # all predictors are continuous/interval
+    X_train[continuous] = z.transform(X_train[continuous]) # all predictors are continuous/interval
+    X_test[continuous] = z.transform(X_test[continuous]) # all predictors are continuous/interval
+    
+    # create model
+    LR_Model = LinearRegression() # empty model
+
+    # fit model
+    LR_Model.fit(X_train, y_train) # fit model (aka learn the model parameters)
+    
+    # predict
+    price_pred_train = LR_Model.predict(X_train) # make predictions for data in X_train
+    price_pred_test = LR_Model.predict(X_test) # make predictions for data in X_test
+    
+    # mse
+    mse_train.append(mean_squared_error(y_train, price_pred_train))
+    mse_test.append(mean_squared_error(y_test, price_pred_test))
+    
+    # mae
+    mae_train.append(mean_absolute_error(y_train, price_pred_train))
+    mae_test.append(mean_absolute_error(y_test, price_pred_test))
+    
+    #r2
+    r2_train.append(r2_score(y_train, price_pred_train))
+    r2_test.append(r2_score(y_test, price_pred_test))
+
+print("MSE train: ", np.mean(mse_train))
+print("MSE test : ", np.mean(mse_test))   
+
+print("MAE train: ", np.mean(mae_train))
+print("MAE test : ", np.mean(mae_test))   
+
+print("R2 train : ", np.mean(r2_train))
+print("R2 test  : ", np.mean(r2_test))   
+    
+    
+```
+
+:::
+</details>
+
+
+<details>
+<summary>K-Nearest Neighbors Regression</summary>
+
+<section>
+#### Loading and Pre-Processing
+First, we need to import our packages and load in our data.
+```{python}
+# doesn't show warnings so that we can have blissful ignorance
+import warnings
+warnings.filterwarnings('ignore')
+
+# base packages
+import pandas as pd
+import numpy as np
+from plotnine import *
+
+# modelling imports
+from sklearn.neighbors import KNeighborsRegressor # KNN Regression Model
+from sklearn.preprocessing import StandardScaler, LabelBinarizer #Z-score variables, binary
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score #model evaluation
+
+from sklearn.model_selection import train_test_split # simple TT split cv
+from sklearn.model_selection import KFold # k-fold cv
+
+```
+
+```{python}
+ama = pd.read_csv("https://raw.githubusercontent.com/cmparlettpelleriti/CPSC392ParlettPelleriti/master/Data/amazon-books.txt",
+                 sep = "\t") #file is tsv not csv, so sep = "\t"
+
+# ama.head()
+```
+
+Now we want to do any pre-processing we need. Here we'll check the number of missing values to see if we need to drop any.
+
+
+```{python}
+# check null
+print(ama.isnull().sum()) # check if too many are missing
+print(ama.shape) # how many rows, cols to we have?
+```
+
+There aren't many missing values here, compared to the number of rows, so I feel comfortable dropping any row that's missing a value. So let's do that.
+
+```{python}
+# drop missing
+ama = ama.dropna() # drop missing rows
+ama = ama.reset_index() # reset indices
+```
+
+Here we drop missing values, and reset the indices. `dropna()` will by default drop any row that's missing a value. Say we have 5 rows, and our row indices are 0,1,2,3 and 4. If row 2 has a missing value, `dropna()` will drop it. But now our indices are weird, because it goes 0,1,3,4 instead of 0,1,2,3. `reset_index()` will take our data and make sure there are no skipped indices.
+
+Now we can prepare to build our model by separating the data into predictors (inputs to the model) and an outcome (the output of the model; what it's predicting). We'll also turn `Hard/ Paper` into a binary (0/1) variable so that our model can process it.
+
+```{python}
+# set up X and y
+predictors = ["List Price", "NumPages",
+              "Weight (oz)", "Thick",
+              "Height", "Width", "Hard/ Paper"] # specify predictor vars
+
+X = ama[predictors] # predictors/input
+y = ama["Amazon Price"] # outcome/output
+
+# binary
+b = LabelBinarizer()
+X["Hard/ Paper"] = b.fit_transform(X["Hard/ Paper"])
+```
+
+Next, we need to separate our data into a *training* and *testing* set. The train set will be used to fit the model, and the test set will be used to help us understand how the model performs on data it has never seen before. We are VERY careful to make sure that no information from the test set leaks into the model.
+
+:::panel-tabset
+
+### Train Test Split
+
+```{python}
+X_test, X_train, y_test, y_train = train_test_split(X,y, test_size = 0.2) #80/20 TTS
+```
+
+Then, we'll z-score our inputs. All our predictors except `Hard/ Paper` are continuous, so we'll z-score all of them except `Hard/ Paper`.
+
+```{python}
+continuous =  ["List Price", "NumPages",
+              "Weight (oz)", "Thick",
+              "Height", "Width"] # specify continuous vars
+# z score
+z = StandardScaler() # create empty z-score object
+
+z.fit(X_train[continuous]) # all predictors are continuous/interval
+X_train[continuous] = z.transform(X_train[continuous]) # all predictors are continuous/interval
+X_test[continuous] = z.transform(X_test[continuous]) # all predictors are continuous/interval
+```
+
+#### Build and Fit the Model
+Now, we're ready to build the model. First, we create an empty model, and then we fit it. Fitting allows the empty model to use the data we give it (here `X` and `y`) to figure out what the parameters of the model should be. Here the parameters are the intercept and coefficient of the model.
+
+```{python}
+# create model
+KNN = KNeighborsRegressor() # empty model
+
+# fit model
+KNN.fit(X_train, y_train) # fit model (aka learn the model parameters)
+```
+
+#### Evaluate the Model
+
+Now that we have a fitted model, we need to check how well it performs. For a continuous outcome, we often check the Mean Squared Error (MSE), Mean Absolute Error (MAE) and R-sqaured (R2) values.
+
+All three of these metrics compare the *actual* outcomes (here, Amazon Price) with what the model *predicts* the outcome will be. So first, we generate predictions for our dataset, then we use these predictions and the actual values (in `y`) to calculate these three metrics. We'll do this for both the train and the test set.
+
+```{python}
+# predict
+price_pred_train = KNN.predict(X_train) # make predictions for data in X
+
+# mse and mae
+print("Train MSE: ", mean_squared_error(y_train,price_pred_train))
+print("Train MAE: ", mean_absolute_error(y_train,price_pred_train))
+
+# r2
+print("Train R2 : ", r2_score(y_train,price_pred_train))
+
+# predict
+price_pred_test = KNN.predict(X_test) # make predictions for data in X
+
+# mse and mae
+print("Test MSE : ", mean_squared_error(y_test,price_pred_test))
+print("Test MAE : ", mean_absolute_error(y_test,price_pred_test))
+
+# r2
+print("Test R2  : ", r2_score(y_test,price_pred_test))
+```
+
+
+
+### K-Fold
+
+To use KFold, we need to create a `for` loop which repeats our code `K` times (here, `K` is 5, for 5-Fold CV). The variables `train` and `test` contain the indices of the rows that should be in the train and test sets, respectively. Each time our for loop iterates, we will grab the rows in `X` that should be in the training set and put them in `X_train`, we will grab the rows in `X` that should be in the testing set and put them in `X_test`, we will grab the rows in `y` that should be in the training set and put them in `y_train`, and we will grab the rows in `y` that should be in the testing set and put them in `y_test`.
+
+Then, we'll z-score our inputs. All our predictors except `Hard/ Paper` are continuous, so we'll z-score all of them except `Hard/ Paper`.
+
+#### Model Building and Evaluation 
+Now, we're ready to build the model. First, we create an empty model, and then we fit it. Fitting allows the empty model to use the data we give it (here `X` and `y`) to figure out what the parameters of the model should be. Here the parameters are the intercept and coefficient of the model.
+
+Now that we have a fitted model, we need to check how well it performs. For a continuous outcome, we often check the Mean Squared Error (MSE), Mean Absolute Error (MAE) and R-squared (R2) values. Because we're doing K-Fold CV, we'll have K different MSEs, MAEs, and R2s for the train/test set. So, we store all K of them in lists (`mae_train`, `mae_test`...etc).
+
+All three of these metrics compare the *actual* outcomes (here, Amazon Price) with what the model *predicts* the outcome will be. So first, we generate predictions for our dataset, then we use these predictions and the actual values (in `y`) to calculate these three metrics. We'll do this for both the train and the test set.
+
+
+```{python}
+kf = KFold(5) # 5-Fold CV
+
+mse_train = []
+mse_test  = []
+mae_train = []
+mae_test  = []
+r2_train   = []
+r2_test    = []
+
+continuous =  ["List Price", "NumPages",
+              "Weight (oz)", "Thick",
+              "Height", "Width"] # specify continuous vars
+
+for train,test in kf.split(X):
+    
+    # split into train/test
+    X_train = X.iloc[train]
+    X_test = X.iloc[test]
+    y_train = y[train]
+    y_test = y[test]
+    
+    # z score
+    z = StandardScaler() # create empty z-score object
+
+    z.fit(X_train[continuous]) # all predictors are continuous/interval
+    X_train[continuous] = z.transform(X_train[continuous]) # all predictors are continuous/interval
+    X_test[continuous] = z.transform(X_test[continuous]) # all predictors are continuous/interval
+    
+    # create model
+    KNN = KNeighborsRegressor() # empty model
+
+    # fit model
+    KNN.fit(X_train, y_train) # fit model (aka learn the model parameters)
+    
+    # predict
+    price_pred_train = KNN.predict(X_train) # make predictions for data in X_train
+    price_pred_test = KNN.predict(X_test) # make predictions for data in X_test
+    
+    # mse
+    mse_train.append(mean_squared_error(y_train, price_pred_train))
+    mse_test.append(mean_squared_error(y_test, price_pred_test))
+    
+    # mae
+    mae_train.append(mean_absolute_error(y_train, price_pred_train))
+    mae_test.append(mean_absolute_error(y_test, price_pred_test))
+    
+    #r2
+    r2_train.append(r2_score(y_train, price_pred_train))
+    r2_test.append(r2_score(y_test, price_pred_test))
+
+print("MSE train: ", np.mean(mse_train))
+print("MSE test : ", np.mean(mse_test))   
+
+print("MAE train: ", np.mean(mae_train))
+print("MAE test : ", np.mean(mae_test))   
+
+print("R2 train : ", np.mean(r2_train))
+print("R2 test  : ", np.mean(r2_test))   
+    
+    
+```
+
+:::
+</details>
+
+<details>
+<summary>Regression Trees</summary>
+
+<section>
+#### Loading and Pre-Processing
+First, we need to import our packages and load in our data.
+```{python}
+# doesn't show warnings so that we can have blissful ignorance
+import warnings
+warnings.filterwarnings('ignore')
+
+# base packages
+import pandas as pd
+import numpy as np
+from plotnine import *
+
+# modelling imports
+from sklearn.tree import DecisionTreeRegressor # Regression Tree Model
+from sklearn.preprocessing import StandardScaler, LabelBinarizer #Z-score variables, binary
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score #model evaluation
+
+from sklearn.model_selection import train_test_split # simple TT split cv
+from sklearn.model_selection import KFold # k-fold cv
+
+```
+
+```{python}
+ama = pd.read_csv("https://raw.githubusercontent.com/cmparlettpelleriti/CPSC392ParlettPelleriti/master/Data/amazon-books.txt",
+                 sep = "\t") #file is tsv not csv, so sep = "\t"
+
+# ama.head()
+```
+
+Now we want to do any pre-processing we need. Here we'll check the number of missing values to see if we need to drop any.
+
+
+```{python}
+# check null
+print(ama.isnull().sum()) # check if too many are missing
+print(ama.shape) # how many rows, cols to we have?
+```
+
+There aren't many missing values here, compared to the number of rows, so I feel comfortable dropping any row that's missing a value. So let's do that.
+
+```{python}
+# drop missing
+ama = ama.dropna() # drop missing rows
+ama = ama.reset_index() # reset indices
+```
+
+Here we drop missing values, and reset the indices. `dropna()` will by default drop any row that's missing a value. Say we have 5 rows, and our row indices are 0,1,2,3 and 4. If row 2 has a missing value, `dropna()` will drop it. But now our indices are weird, because it goes 0,1,3,4 instead of 0,1,2,3. `reset_index()` will take our data and make sure there are no skipped indices.
+
+Now we can prepare to build our model by separating the data into predictors (inputs to the model) and an outcome (the output of the model; what it's predicting). We'll also turn `Hard/ Paper` into a binary (0/1) variable so that our model can process it.
+
+```{python}
+# set up X and y
+predictors = ["List Price", "NumPages",
+              "Weight (oz)", "Thick",
+              "Height", "Width", "Hard/ Paper"] # specify predictor vars
+
+X = ama[predictors] # predictors/input
+y = ama["Amazon Price"] # outcome/output
+
+# binary
+b = LabelBinarizer()
+X["Hard/ Paper"] = b.fit_transform(X["Hard/ Paper"])
+```
+
+Next, we need to separate our data into a *training* and *testing* set. The train set will be used to fit the model, and the test set will be used to help us understand how the model performs on data it has never seen before. We are VERY careful to make sure that no information from the test set leaks into the model.
+
+:::panel-tabset
+
+### Train Test Split
+
+```{python}
+X_test, X_train, y_test, y_train = train_test_split(X,y, test_size = 0.2) #80/20 TTS
+```
+
+Then, we'll z-score our inputs. All our predictors except `Hard/ Paper` are continuous, so we'll z-score all of them except `Hard/ Paper`.
+
+```{python}
+continuous =  ["List Price", "NumPages",
+              "Weight (oz)", "Thick",
+              "Height", "Width"] # specify continuous vars
+# z score
+z = StandardScaler() # create empty z-score object
+
+z.fit(X_train[continuous]) # all predictors are continuous/interval
+X_train[continuous] = z.transform(X_train[continuous]) # all predictors are continuous/interval
+X_test[continuous] = z.transform(X_test[continuous]) # all predictors are continuous/interval
+```
+
+#### Build and Fit the Model
+Now, we're ready to build the model. First, we create an empty model, and then we fit it. Fitting allows the empty model to use the data we give it (here `X` and `y`) to figure out what the parameters of the model should be. Here the parameters are the intercept and coefficient of the model.
+
+```{python}
+# create model
+tree = DecisionTreeRegressor() # empty model
+
+# fit model
+tree.fit(X_train, y_train) # fit model (aka learn the model parameters)
+```
+
+#### Evaluate the Model
+
+Now that we have a fitted model, we need to check how well it performs. For a continuous outcome, we often check the Mean Squared Error (MSE), Mean Absolute Error (MAE) and R-sqaured (R2) values.
+
+All three of these metrics compare the *actual* outcomes (here, Amazon Price) with what the model *predicts* the outcome will be. So first, we generate predictions for our dataset, then we use these predictions and the actual values (in `y`) to calculate these three metrics. We'll do this for both the train and the test set.
+
+```{python}
+# predict
+price_pred_train = tree.predict(X_train) # make predictions for data in X
+
+# mse and mae
+print("Train MSE: ", mean_squared_error(y_train,price_pred_train))
+print("Train MAE: ", mean_absolute_error(y_train,price_pred_train))
+
+# r2
+print("Train R2 : ", r2_score(y_train,price_pred_train))
+
+# predict
+price_pred_test = tree.predict(X_test) # make predictions for data in X
+
+# mse and mae
+print("Test MSE : ", mean_squared_error(y_test,price_pred_test))
+print("Test MAE : ", mean_absolute_error(y_test,price_pred_test))
+
+# r2
+print("Test R2  : ", r2_score(y_test,price_pred_test))
+```
+
+
+
+### K-Fold
+
+To use KFold, we need to create a `for` loop which repeats our code `K` times (here, `K` is 5, for 5-Fold CV). The variables `train` and `test` contain the indices of the rows that should be in the train and test sets, respectively. Each time our for loop iterates, we will grab the rows in `X` that should be in the training set and put them in `X_train`, we will grab the rows in `X` that should be in the testing set and put them in `X_test`, we will grab the rows in `y` that should be in the training set and put them in `y_train`, and we will grab the rows in `y` that should be in the testing set and put them in `y_test`.
+
+Then, we'll z-score our inputs. All our predictors except `Hard/ Paper` are continuous, so we'll z-score all of them except `Hard/ Paper`.
+
+#### Model Building and Evaluation 
+Now, we're ready to build the model. First, we create an empty model, and then we fit it. Fitting allows the empty model to use the data we give it (here `X` and `y`) to figure out what the parameters of the model should be. Here the parameters are the intercept and coefficient of the model.
+
+Now that we have a fitted model, we need to check how well it performs. For a continuous outcome, we often check the Mean Squared Error (MSE), Mean Absolute Error (MAE) and R-squared (R2) values. Because we're doing K-Fold CV, we'll have K different MSEs, MAEs, and R2s for the train/test set. So, we store all K of them in lists (`mae_train`, `mae_test`...etc).
+
+All three of these metrics compare the *actual* outcomes (here, Amazon Price) with what the model *predicts* the outcome will be. So first, we generate predictions for our dataset, then we use these predictions and the actual values (in `y`) to calculate these three metrics. We'll do this for both the train and the test set.
+
+
+```{python}
+kf = KFold(5) # 5-Fold CV
+
+mse_train = []
+mse_test  = []
+mae_train = []
+mae_test  = []
+r2_train   = []
+r2_test    = []
+
+continuous =  ["List Price", "NumPages",
+              "Weight (oz)", "Thick",
+              "Height", "Width"] # specify continuous vars
+
+for train,test in kf.split(X):
+    
+    # split into train/test
+    X_train = X.iloc[train]
+    X_test = X.iloc[test]
+    y_train = y[train]
+    y_test = y[test]
+    
+    # z score
+    z = StandardScaler() # create empty z-score object
+
+    z.fit(X_train[continuous]) # all predictors are continuous/interval
+    X_train[continuous] = z.transform(X_train[continuous]) # all predictors are continuous/interval
+    X_test[continuous] = z.transform(X_test[continuous]) # all predictors are continuous/interval
+    
+    # create model
+    tree = DecisionTreeRegressor() # empty model
+
+    # fit model
+    tree.fit(X_train, y_train) # fit model (aka learn the model parameters)
+    
+    # predict
+    price_pred_train = tree.predict(X_train) # make predictions for data in X_train
+    price_pred_test = tree.predict(X_test) # make predictions for data in X_test
+    
+    # mse
+    mse_train.append(mean_squared_error(y_train, price_pred_train))
+    mse_test.append(mean_squared_error(y_test, price_pred_test))
+    
+    # mae
+    mae_train.append(mean_absolute_error(y_train, price_pred_train))
+    mae_test.append(mean_absolute_error(y_test, price_pred_test))
+    
+    #r2
+    r2_train.append(r2_score(y_train, price_pred_train))
+    r2_test.append(r2_score(y_test, price_pred_test))
+
+print("MSE train: ", np.mean(mse_train))
+print("MSE test : ", np.mean(mse_test))   
+
+print("MAE train: ", np.mean(mae_train))
+print("MAE test : ", np.mean(mae_test))   
+
+print("R2 train : ", np.mean(r2_train))
+print("R2 test  : ", np.mean(r2_test))   
+    
+    
+```
+
+:::
+</details>
+
+
+<details>
+<summary>Random Forest Regression</summary>
+
+<section>
+#### Loading and Pre-Processing
+First, we need to import our packages and load in our data.
+```{python}
+# doesn't show warnings so that we can have blissful ignorance
+import warnings
+warnings.filterwarnings('ignore')
+
+# base packages
+import pandas as pd
+import numpy as np
+from plotnine import *
+
+# modelling imports
+from sklearn.ensemble import RandomForestRegressor # Regression RF Model
+from sklearn.preprocessing import StandardScaler, LabelBinarizer #Z-score variables, binary
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score #model evaluation
+
+from sklearn.model_selection import train_test_split # simple TT split cv
+from sklearn.model_selection import KFold # k-fold cv
+
+```
+
+```{python}
+ama = pd.read_csv("https://raw.githubusercontent.com/cmparlettpelleriti/CPSC392ParlettPelleriti/master/Data/amazon-books.txt",
+                 sep = "\t") #file is tsv not csv, so sep = "\t"
+
+# ama.head()
+```
+
+Now we want to do any pre-processing we need. Here we'll check the number of missing values to see if we need to drop any.
+
+
+```{python}
+# check null
+print(ama.isnull().sum()) # check if too many are missing
+print(ama.shape) # how many rows, cols to we have?
+```
+
+There aren't many missing values here, compared to the number of rows, so I feel comfortable dropping any row that's missing a value. So let's do that.
+
+```{python}
+# drop missing
+ama = ama.dropna() # drop missing rows
+ama = ama.reset_index() # reset indices
+```
+
+Here we drop missing values, and reset the indices. `dropna()` will by default drop any row that's missing a value. Say we have 5 rows, and our row indices are 0,1,2,3 and 4. If row 2 has a missing value, `dropna()` will drop it. But now our indices are weird, because it goes 0,1,3,4 instead of 0,1,2,3. `reset_index()` will take our data and make sure there are no skipped indices.
+
+Now we can prepare to build our model by separating the data into predictors (inputs to the model) and an outcome (the output of the model; what it's predicting). We'll also turn `Hard/ Paper` into a binary (0/1) variable so that our model can process it.
+
+```{python}
+# set up X and y
+predictors = ["List Price", "NumPages",
+              "Weight (oz)", "Thick",
+              "Height", "Width", "Hard/ Paper"] # specify predictor vars
+
+X = ama[predictors] # predictors/input
+y = ama["Amazon Price"] # outcome/output
+
+# binary
+b = LabelBinarizer()
+X["Hard/ Paper"] = b.fit_transform(X["Hard/ Paper"])
+```
+
+Next, we need to separate our data into a *training* and *testing* set. The train set will be used to fit the model, and the test set will be used to help us understand how the model performs on data it has never seen before. We are VERY careful to make sure that no information from the test set leaks into the model.
+
+:::panel-tabset
+
+### Train Test Split
+
+```{python}
+X_test, X_train, y_test, y_train = train_test_split(X,y, test_size = 0.2) #80/20 TTS
+```
+
+Then, we'll z-score our inputs. All our predictors except `Hard/ Paper` are continuous, so we'll z-score all of them except `Hard/ Paper`.
+
+```{python}
+continuous =  ["List Price", "NumPages",
+              "Weight (oz)", "Thick",
+              "Height", "Width"] # specify continuous vars
+# z score
+z = StandardScaler() # create empty z-score object
+
+z.fit(X_train[continuous]) # all predictors are continuous/interval
+X_train[continuous] = z.transform(X_train[continuous]) # all predictors are continuous/interval
+X_test[continuous] = z.transform(X_test[continuous]) # all predictors are continuous/interval
+```
+
+#### Build and Fit the Model
+Now, we're ready to build the model. First, we create an empty model, and then we fit it. Fitting allows the empty model to use the data we give it (here `X` and `y`) to figure out what the parameters of the model should be. Here the parameters are the intercept and coefficient of the model.
+
+```{python}
+# create model
+tree = RandomForestRegressor() # empty model
+
+# fit model
+tree.fit(X_train, y_train) # fit model (aka learn the model parameters)
+```
+
+#### Evaluate the Model
+
+Now that we have a fitted model, we need to check how well it performs. For a continuous outcome, we often check the Mean Squared Error (MSE), Mean Absolute Error (MAE) and R-sqaured (R2) values.
+
+All three of these metrics compare the *actual* outcomes (here, Amazon Price) with what the model *predicts* the outcome will be. So first, we generate predictions for our dataset, then we use these predictions and the actual values (in `y`) to calculate these three metrics. We'll do this for both the train and the test set.
+
+```{python}
+# predict
+price_pred_train = tree.predict(X_train) # make predictions for data in X
+
+# mse and mae
+print("Train MSE: ", mean_squared_error(y_train,price_pred_train))
+print("Train MAE: ", mean_absolute_error(y_train,price_pred_train))
+
+# r2
+print("Train R2 : ", r2_score(y_train,price_pred_train))
+
+# predict
+price_pred_test = tree.predict(X_test) # make predictions for data in X
+
+# mse and mae
+print("Test MSE : ", mean_squared_error(y_test,price_pred_test))
+print("Test MAE : ", mean_absolute_error(y_test,price_pred_test))
+
+# r2
+print("Test R2  : ", r2_score(y_test,price_pred_test))
+```
+
+
+
+### K-Fold
+
+To use KFold, we need to create a `for` loop which repeats our code `K` times (here, `K` is 5, for 5-Fold CV). The variables `train` and `test` contain the indices of the rows that should be in the train and test sets, respectively. Each time our for loop iterates, we will grab the rows in `X` that should be in the training set and put them in `X_train`, we will grab the rows in `X` that should be in the testing set and put them in `X_test`, we will grab the rows in `y` that should be in the training set and put them in `y_train`, and we will grab the rows in `y` that should be in the testing set and put them in `y_test`.
+
+Then, we'll z-score our inputs. All our predictors except `Hard/ Paper` are continuous, so we'll z-score all of them except `Hard/ Paper`.
+
+#### Model Building and Evaluation 
+Now, we're ready to build the model. First, we create an empty model, and then we fit it. Fitting allows the empty model to use the data we give it (here `X` and `y`) to figure out what the parameters of the model should be. Here the parameters are the intercept and coefficient of the model.
+
+Now that we have a fitted model, we need to check how well it performs. For a continuous outcome, we often check the Mean Squared Error (MSE), Mean Absolute Error (MAE) and R-squared (R2) values. Because we're doing K-Fold CV, we'll have K different MSEs, MAEs, and R2s for the train/test set. So, we store all K of them in lists (`mae_train`, `mae_test`...etc).
+
+All three of these metrics compare the *actual* outcomes (here, Amazon Price) with what the model *predicts* the outcome will be. So first, we generate predictions for our dataset, then we use these predictions and the actual values (in `y`) to calculate these three metrics. We'll do this for both the train and the test set.
+
+
+```{python}
+kf = KFold(5) # 5-Fold CV
+
+mse_train = []
+mse_test  = []
+mae_train = []
+mae_test  = []
+r2_train   = []
+r2_test    = []
+
+continuous =  ["List Price", "NumPages",
+              "Weight (oz)", "Thick",
+              "Height", "Width"] # specify continuous vars
+
+for train,test in kf.split(X):
+    
+    # split into train/test
+    X_train = X.iloc[train]
+    X_test = X.iloc[test]
+    y_train = y[train]
+    y_test = y[test]
+    
+    # z score
+    z = StandardScaler() # create empty z-score object
+
+    z.fit(X_train[continuous]) # all predictors are continuous/interval
+    X_train[continuous] = z.transform(X_train[continuous]) # all predictors are continuous/interval
+    X_test[continuous] = z.transform(X_test[continuous]) # all predictors are continuous/interval
+    
+    # create model
+    tree = RandomForestRegressor() # empty model
+
+    # fit model
+    tree.fit(X_train, y_train) # fit model (aka learn the model parameters)
+    
+    # predict
+    price_pred_train = tree.predict(X_train) # make predictions for data in X_train
+    price_pred_test = tree.predict(X_test) # make predictions for data in X_test
+    
+    # mse
+    mse_train.append(mean_squared_error(y_train, price_pred_train))
+    mse_test.append(mean_squared_error(y_test, price_pred_test))
+    
+    # mae
+    mae_train.append(mean_absolute_error(y_train, price_pred_train))
+    mae_test.append(mean_absolute_error(y_test, price_pred_test))
+    
+    #r2
+    r2_train.append(r2_score(y_train, price_pred_train))
+    r2_test.append(r2_score(y_test, price_pred_test))
+
+print("MSE train: ", np.mean(mse_train))
+print("MSE test : ", np.mean(mse_test))   
+
+print("MAE train: ", np.mean(mae_train))
+print("MAE test : ", np.mean(mae_test))   
+
+print("R2 train : ", np.mean(r2_train))
+print("R2 test  : ", np.mean(r2_test))   
+    
+    
+```
+
+:::
+</details>
+
+<details>
+<summary>LASSO</summary>
+
+<section>
+#### Loading and Pre-Processing
+First, we need to import our packages and load in our data.
+```{python}
+# doesn't show warnings so that we can have blissful ignorance
+import warnings
+warnings.filterwarnings('ignore')
+
+# base packages
+import pandas as pd
+import numpy as np
+from plotnine import *
+
+# modelling imports
+from sklearn.linear_model import Lasso # Lasso Model
+from sklearn.preprocessing import StandardScaler, LabelBinarizer #Z-score variables, binary
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score #model evaluation
+
+from sklearn.model_selection import train_test_split # simple TT split cv
+from sklearn.model_selection import KFold # k-fold cv
+
+```
+
+```{python}
+ama = pd.read_csv("https://raw.githubusercontent.com/cmparlettpelleriti/CPSC392ParlettPelleriti/master/Data/amazon-books.txt",
+                 sep = "\t") #file is tsv not csv, so sep = "\t"
+
+# ama.head()
+```
+
+Now we want to do any pre-processing we need. Here we'll check the number of missing values to see if we need to drop any.
+
+
+```{python}
+# check null
+print(ama.isnull().sum()) # check if too many are missing
+print(ama.shape) # how many rows, cols to we have?
+```
+
+There aren't many missing values here, compared to the number of rows, so I feel comfortable dropping any row that's missing a value. So let's do that.
+
+```{python}
+# drop missing
+ama = ama.dropna() # drop missing rows
+ama = ama.reset_index() # reset indices
+```
+
+Here we drop missing values, and reset the indices. `dropna()` will by default drop any row that's missing a value. Say we have 5 rows, and our row indices are 0,1,2,3 and 4. If row 2 has a missing value, `dropna()` will drop it. But now our indices are weird, because it goes 0,1,3,4 instead of 0,1,2,3. `reset_index()` will take our data and make sure there are no skipped indices.
+
+Now we can prepare to build our model by separating the data into predictors (inputs to the model) and an outcome (the output of the model; what it's predicting). We'll also turn `Hard/ Paper` into a binary (0/1) variable so that our model can process it.
+
+```{python}
+# set up X and y
+predictors = ["List Price", "NumPages",
+              "Weight (oz)", "Thick",
+              "Height", "Width", "Hard/ Paper"] # specify predictor vars
+
+X = ama[predictors] # predictors/input
+y = ama["Amazon Price"] # outcome/output
+
+# binary
+b = LabelBinarizer()
+X["Hard/ Paper"] = b.fit_transform(X["Hard/ Paper"])
+```
+
+Next, we need to separate our data into a *training* and *testing* set. The train set will be used to fit the model, and the test set will be used to help us understand how the model performs on data it has never seen before. We are VERY careful to make sure that no information from the test set leaks into the model.
+
+:::panel-tabset
+
+### Train Test Split
+
+```{python}
+X_test, X_train, y_test, y_train = train_test_split(X,y, test_size = 0.2) #80/20 TTS
+```
+
+Then, we'll z-score our inputs. All our predictors except `Hard/ Paper` are continuous, so we'll z-score all of them except `Hard/ Paper`.
+
+```{python}
+continuous =  ["List Price", "NumPages",
+              "Weight (oz)", "Thick",
+              "Height", "Width"] # specify continuous vars
+# z score
+z = StandardScaler() # create empty z-score object
+
+z.fit(X_train[continuous]) # all predictors are continuous/interval
+X_train[continuous] = z.transform(X_train[continuous]) # all predictors are continuous/interval
+X_test[continuous] = z.transform(X_test[continuous]) # all predictors are continuous/interval
+```
+
+#### Build and Fit the Model
+Now, we're ready to build the model. First, we create an empty model, and then we fit it. Fitting allows the empty model to use the data we give it (here `X` and `y`) to figure out what the parameters of the model should be. Here the parameters are the intercept and coefficient of the model.
+
+```{python}
+# create model
+lasso = Lasso() # empty model
+
+# fit model
+lasso.fit(X_train, y_train) # fit model (aka learn the model parameters)
+```
+
+#### Evaluate the Model
+
+Now that we have a fitted model, we need to check how well it performs. For a continuous outcome, we often check the Mean Squared Error (MSE), Mean Absolute Error (MAE) and R-sqaured (R2) values.
+
+All three of these metrics compare the *actual* outcomes (here, Amazon Price) with what the model *predicts* the outcome will be. So first, we generate predictions for our dataset, then we use these predictions and the actual values (in `y`) to calculate these three metrics. We'll do this for both the train and the test set.
+
+```{python}
+# predict
+price_pred_train = lasso.predict(X_train) # make predictions for data in X
+
+# mse and mae
+print("Train MSE: ", mean_squared_error(y_train,price_pred_train))
+print("Train MAE: ", mean_absolute_error(y_train,price_pred_train))
+
+# r2
+print("Train R2 : ", r2_score(y_train,price_pred_train))
+
+# predict
+price_pred_test = lasso.predict(X_test) # make predictions for data in X
+
+# mse and mae
+print("Test MSE : ", mean_squared_error(y_test,price_pred_test))
+print("Test MAE : ", mean_absolute_error(y_test,price_pred_test))
+
+# r2
+print("Test R2  : ", r2_score(y_test,price_pred_test))
+```
+
+
+
+### K-Fold
+
+To use KFold, we need to create a `for` loop which repeats our code `K` times (here, `K` is 5, for 5-Fold CV). The variables `train` and `test` contain the indices of the rows that should be in the train and test sets, respectively. Each time our for loop iterates, we will grab the rows in `X` that should be in the training set and put them in `X_train`, we will grab the rows in `X` that should be in the testing set and put them in `X_test`, we will grab the rows in `y` that should be in the training set and put them in `y_train`, and we will grab the rows in `y` that should be in the testing set and put them in `y_test`.
+
+Then, we'll z-score our inputs. All our predictors except `Hard/ Paper` are continuous, so we'll z-score all of them except `Hard/ Paper`.
+
+#### Model Building and Evaluation 
+Now, we're ready to build the model. First, we create an empty model, and then we fit it. Fitting allows the empty model to use the data we give it (here `X` and `y`) to figure out what the parameters of the model should be. Here the parameters are the intercept and coefficient of the model.
+
+Now that we have a fitted model, we need to check how well it performs. For a continuous outcome, we often check the Mean Squared Error (MSE), Mean Absolute Error (MAE) and R-squared (R2) values. Because we're doing K-Fold CV, we'll have K different MSEs, MAEs, and R2s for the train/test set. So, we store all K of them in lists (`mae_train`, `mae_test`...etc).
+
+All three of these metrics compare the *actual* outcomes (here, Amazon Price) with what the model *predicts* the outcome will be. So first, we generate predictions for our dataset, then we use these predictions and the actual values (in `y`) to calculate these three metrics. We'll do this for both the train and the test set.
+
+
+```{python}
+kf = KFold(5) # 5-Fold CV
+
+mse_train = []
+mse_test  = []
+mae_train = []
+mae_test  = []
+r2_train   = []
+r2_test    = []
+
+continuous =  ["List Price", "NumPages",
+              "Weight (oz)", "Thick",
+              "Height", "Width"] # specify continuous vars
+
+for train,test in kf.split(X):
+    
+    # split into train/test
+    X_train = X.iloc[train]
+    X_test = X.iloc[test]
+    y_train = y[train]
+    y_test = y[test]
+    
+    # z score
+    z = StandardScaler() # create empty z-score object
+
+    z.fit(X_train[continuous]) # all predictors are continuous/interval
+    X_train[continuous] = z.transform(X_train[continuous]) # all predictors are continuous/interval
+    X_test[continuous] = z.transform(X_test[continuous]) # all predictors are continuous/interval
+    
+    # create model
+    lasso = Lasso() # empty model
+
+    # fit model
+    lasso.fit(X_train, y_train) # fit model (aka learn the model parameters)
+    
+    # predict
+    price_pred_train = lasso.predict(X_train) # make predictions for data in X_train
+    price_pred_test = lasso.predict(X_test) # make predictions for data in X_test
+    
+    # mse
+    mse_train.append(mean_squared_error(y_train, price_pred_train))
+    mse_test.append(mean_squared_error(y_test, price_pred_test))
+    
+    # mae
+    mae_train.append(mean_absolute_error(y_train, price_pred_train))
+    mae_test.append(mean_absolute_error(y_test, price_pred_test))
+    
+    #r2
+    r2_train.append(r2_score(y_train, price_pred_train))
+    r2_test.append(r2_score(y_test, price_pred_test))
+
+print("MSE train: ", np.mean(mse_train))
+print("MSE test : ", np.mean(mse_test))   
+
+print("MAE train: ", np.mean(mae_train))
+print("MAE test : ", np.mean(mae_test))   
+
+print("R2 train : ", np.mean(r2_train))
+print("R2 test  : ", np.mean(r2_test))   
+    
+    
+```
+
+:::
+</details>
+
+
+<details>
+<summary>Ridge</summary>
+
+<section>
+#### Loading and Pre-Processing
+First, we need to import our packages and load in our data.
+```{python}
+# doesn't show warnings so that we can have blissful ignorance
+import warnings
+warnings.filterwarnings('ignore')
+
+# base packages
+import pandas as pd
+import numpy as np
+from plotnine import *
+
+# modelling imports
+from sklearn.linear_model import Ridge # Ridge Model
+from sklearn.preprocessing import StandardScaler, LabelBinarizer #Z-score variables, binary
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score #model evaluation
+
+from sklearn.model_selection import train_test_split # simple TT split cv
+from sklearn.model_selection import KFold # k-fold cv
+
+```
+
+```{python}
+ama = pd.read_csv("https://raw.githubusercontent.com/cmparlettpelleriti/CPSC392ParlettPelleriti/master/Data/amazon-books.txt",
+                 sep = "\t") #file is tsv not csv, so sep = "\t"
+
+# ama.head()
+```
+
+Now we want to do any pre-processing we need. Here we'll check the number of missing values to see if we need to drop any.
+
+
+```{python}
+# check null
+print(ama.isnull().sum()) # check if too many are missing
+print(ama.shape) # how many rows, cols to we have?
+```
+
+There aren't many missing values here, compared to the number of rows, so I feel comfortable dropping any row that's missing a value. So let's do that.
+
+```{python}
+# drop missing
+ama = ama.dropna() # drop missing rows
+ama = ama.reset_index() # reset indices
+```
+
+Here we drop missing values, and reset the indices. `dropna()` will by default drop any row that's missing a value. Say we have 5 rows, and our row indices are 0,1,2,3 and 4. If row 2 has a missing value, `dropna()` will drop it. But now our indices are weird, because it goes 0,1,3,4 instead of 0,1,2,3. `reset_index()` will take our data and make sure there are no skipped indices.
+
+Now we can prepare to build our model by separating the data into predictors (inputs to the model) and an outcome (the output of the model; what it's predicting). We'll also turn `Hard/ Paper` into a binary (0/1) variable so that our model can process it.
+
+```{python}
+# set up X and y
+predictors = ["List Price", "NumPages",
+              "Weight (oz)", "Thick",
+              "Height", "Width", "Hard/ Paper"] # specify predictor vars
+
+X = ama[predictors] # predictors/input
+y = ama["Amazon Price"] # outcome/output
+
+# binary
+b = LabelBinarizer()
+X["Hard/ Paper"] = b.fit_transform(X["Hard/ Paper"])
+```
+
+Next, we need to separate our data into a *training* and *testing* set. The train set will be used to fit the model, and the test set will be used to help us understand how the model performs on data it has never seen before. We are VERY careful to make sure that no information from the test set leaks into the model.
+
+:::panel-tabset
+
+### Train Test Split
+
+```{python}
+X_test, X_train, y_test, y_train = train_test_split(X,y, test_size = 0.2) #80/20 TTS
+```
+
+Then, we'll z-score our inputs. All our predictors except `Hard/ Paper` are continuous, so we'll z-score all of them except `Hard/ Paper`.
+
+```{python}
+continuous =  ["List Price", "NumPages",
+              "Weight (oz)", "Thick",
+              "Height", "Width"] # specify continuous vars
+# z score
+z = StandardScaler() # create empty z-score object
+
+z.fit(X_train[continuous]) # all predictors are continuous/interval
+X_train[continuous] = z.transform(X_train[continuous]) # all predictors are continuous/interval
+X_test[continuous] = z.transform(X_test[continuous]) # all predictors are continuous/interval
+```
+
+#### Build and Fit the Model
+Now, we're ready to build the model. First, we create an empty model, and then we fit it. Fitting allows the empty model to use the data we give it (here `X` and `y`) to figure out what the parameters of the model should be. Here the parameters are the intercept and coefficient of the model.
+
+```{python}
+# create model
+ridge = Ridge() # empty model
+
+# fit model
+ridge.fit(X_train, y_train) # fit model (aka learn the model parameters)
+```
+
+#### Evaluate the Model
+
+Now that we have a fitted model, we need to check how well it performs. For a continuous outcome, we often check the Mean Squared Error (MSE), Mean Absolute Error (MAE) and R-sqaured (R2) values.
+
+All three of these metrics compare the *actual* outcomes (here, Amazon Price) with what the model *predicts* the outcome will be. So first, we generate predictions for our dataset, then we use these predictions and the actual values (in `y`) to calculate these three metrics. We'll do this for both the train and the test set.
+
+```{python}
+# predict
+price_pred_train = ridge.predict(X_train) # make predictions for data in X
+
+# mse and mae
+print("Train MSE: ", mean_squared_error(y_train,price_pred_train))
+print("Train MAE: ", mean_absolute_error(y_train,price_pred_train))
+
+# r2
+print("Train R2 : ", r2_score(y_train,price_pred_train))
+
+# predict
+price_pred_test = ridge.predict(X_test) # make predictions for data in X
+
+# mse and mae
+print("Test MSE : ", mean_squared_error(y_test,price_pred_test))
+print("Test MAE : ", mean_absolute_error(y_test,price_pred_test))
+
+# r2
+print("Test R2  : ", r2_score(y_test,price_pred_test))
+```
+
+
+
+### K-Fold
+
+To use KFold, we need to create a `for` loop which repeats our code `K` times (here, `K` is 5, for 5-Fold CV). The variables `train` and `test` contain the indices of the rows that should be in the train and test sets, respectively. Each time our for loop iterates, we will grab the rows in `X` that should be in the training set and put them in `X_train`, we will grab the rows in `X` that should be in the testing set and put them in `X_test`, we will grab the rows in `y` that should be in the training set and put them in `y_train`, and we will grab the rows in `y` that should be in the testing set and put them in `y_test`.
+
+Then, we'll z-score our inputs. All our predictors except `Hard/ Paper` are continuous, so we'll z-score all of them except `Hard/ Paper`.
+
+#### Model Building and Evaluation 
+Now, we're ready to build the model. First, we create an empty model, and then we fit it. Fitting allows the empty model to use the data we give it (here `X` and `y`) to figure out what the parameters of the model should be. Here the parameters are the intercept and coefficient of the model.
+
+Now that we have a fitted model, we need to check how well it performs. For a continuous outcome, we often check the Mean Squared Error (MSE), Mean Absolute Error (MAE) and R-squared (R2) values. Because we're doing K-Fold CV, we'll have K different MSEs, MAEs, and R2s for the train/test set. So, we store all K of them in lists (`mae_train`, `mae_test`...etc).
+
+All three of these metrics compare the *actual* outcomes (here, Amazon Price) with what the model *predicts* the outcome will be. So first, we generate predictions for our dataset, then we use these predictions and the actual values (in `y`) to calculate these three metrics. We'll do this for both the train and the test set.
+
+
+```{python}
+kf = KFold(5) # 5-Fold CV
+
+mse_train = []
+mse_test  = []
+mae_train = []
+mae_test  = []
+r2_train   = []
+r2_test    = []
+
+continuous =  ["List Price", "NumPages",
+              "Weight (oz)", "Thick",
+              "Height", "Width"] # specify continuous vars
+
+for train,test in kf.split(X):
+    
+    # split into train/test
+    X_train = X.iloc[train]
+    X_test = X.iloc[test]
+    y_train = y[train]
+    y_test = y[test]
+    
+    # z score
+    z = StandardScaler() # create empty z-score object
+
+    z.fit(X_train[continuous]) # all predictors are continuous/interval
+    X_train[continuous] = z.transform(X_train[continuous]) # all predictors are continuous/interval
+    X_test[continuous] = z.transform(X_test[continuous]) # all predictors are continuous/interval
+    
+    # create model
+    ridge = Ridge() # empty model
+
+    # fit model
+    ridge.fit(X_train, y_train) # fit model (aka learn the model parameters)
+    
+    # predict
+    price_pred_train = ridge.predict(X_train) # make predictions for data in X_train
+    price_pred_test = ridge.predict(X_test) # make predictions for data in X_test
+    
+    # mse
+    mse_train.append(mean_squared_error(y_train, price_pred_train))
+    mse_test.append(mean_squared_error(y_test, price_pred_test))
+    
+    # mae
+    mae_train.append(mean_absolute_error(y_train, price_pred_train))
+    mae_test.append(mean_absolute_error(y_test, price_pred_test))
+    
+    #r2
+    r2_train.append(r2_score(y_train, price_pred_train))
+    r2_test.append(r2_score(y_test, price_pred_test))
+
+print("MSE train: ", np.mean(mse_train))
+print("MSE test : ", np.mean(mse_test))   
+
+print("MAE train: ", np.mean(mae_train))
+print("MAE test : ", np.mean(mae_test))   
+
+print("R2 train : ", np.mean(r2_train))
+print("R2 test  : ", np.mean(r2_test))   
+    
+    
+```
+
+:::
+</details>
+
+<details>
+<summary>Neural Network</summary>
+
+<section>
+#### Loading and Pre-Processing
+First, we need to import our packages and load in our data.
+```{python}
+# doesn't show warnings so that we can have blissful ignorance
+import warnings
+warnings.filterwarnings('ignore')
+
+# base packages
+import pandas as pd
+import numpy as np
+from plotnine import *
+
+# modelling imports
+import tensorflow.keras as kb
+from sklearn.preprocessing import StandardScaler, LabelBinarizer #Z-score variables, binary
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score #model evaluation
+
+from sklearn.model_selection import train_test_split # simple TT split cv
+from sklearn.model_selection import KFold # k-fold cv
+
+```
+
+```{python}
+ama = pd.read_csv("https://raw.githubusercontent.com/cmparlettpelleriti/CPSC392ParlettPelleriti/master/Data/amazon-books.txt",
+                 sep = "\t") #file is tsv not csv, so sep = "\t"
+
+# ama.head()
+```
+
+Now we want to do any pre-processing we need. Here we'll check the number of missing values to see if we need to drop any.
+
+
+```{python}
+# check null
+print(ama.isnull().sum()) # check if too many are missing
+print(ama.shape) # how many rows, cols to we have?
+```
+
+There aren't many missing values here, compared to the number of rows, so I feel comfortable dropping any row that's missing a value. So let's do that.
+
+```{python}
+# drop missing
+ama = ama.dropna() # drop missing rows
+ama = ama.reset_index() # reset indices
+```
+
+Here we drop missing values, and reset the indices. `dropna()` will by default drop any row that's missing a value. Say we have 5 rows, and our row indices are 0,1,2,3 and 4. If row 2 has a missing value, `dropna()` will drop it. But now our indices are weird, because it goes 0,1,3,4 instead of 0,1,2,3. `reset_index()` will take our data and make sure there are no skipped indices.
+
+Now we can prepare to build our model by separating the data into predictors (inputs to the model) and an outcome (the output of the model; what it's predicting). We'll also turn `Hard/ Paper` into a binary (0/1) variable so that our model can process it.
+
+```{python}
+# set up X and y
+predictors = ["List Price", "NumPages",
+              "Weight (oz)", "Thick",
+              "Height", "Width", "Hard/ Paper"] # specify predictor vars
+
+X = ama[predictors] # predictors/input
+y = ama["Amazon Price"] # outcome/output
+
+# binary
+b = LabelBinarizer()
+X["Hard/ Paper"] = b.fit_transform(X["Hard/ Paper"])
+```
+
+Next, we need to separate our data into a *training* and *testing* set. The train set will be used to fit the model, and the test set will be used to help us understand how the model performs on data it has never seen before. We are VERY careful to make sure that no information from the test set leaks into the model.
+
+:::panel-tabset
+
+### Train Test Split
+
+```{python}
+X_test, X_train, y_test, y_train = train_test_split(X,y, test_size = 0.2) #80/20 TTS
+```
+
+Then, we'll z-score our inputs. All our predictors except `Hard/ Paper` are continuous, so we'll z-score all of them except `Hard/ Paper`.
+
+```{python}
+continuous =  ["List Price", "NumPages",
+              "Weight (oz)", "Thick",
+              "Height", "Width"] # specify continuous vars
+# z score
+z = StandardScaler() # create empty z-score object
+
+z.fit(X_train[continuous]) # all predictors are continuous/interval
+X_train[continuous] = z.transform(X_train[continuous]) # all predictors are continuous/interval
+X_test[continuous] = z.transform(X_test[continuous]) # all predictors are continuous/interval
+```
+
+#### Build and Fit the Model
+Now, we're ready to build the model. First, we create an empty model, and then we fit it. Fitting allows the empty model to use the data we give it (here `X` and `y`) to figure out what the parameters of the model should be. Here the parameters are the intercept and coefficient of the model.
+
+```{python}
+#structure of the model
+model = kb.Sequential([
+    kb.layers.Dense(1, input_shape =[7]), #input
+])
+
+#how to train the model
+model.compile(loss = "mean_squared_error",
+              optimizer = kb.optimizers.SGD())
+
+#fit the model (same as SKlearn)
+model.fit(X_train,y_train, epochs = 5)
+```
+
+#### Evaluate the Model
+
+Now that we have a fitted model, we need to check how well it performs. For a continuous outcome, we often check the Mean Squared Error (MSE), Mean Absolute Error (MAE) and R-sqaured (R2) values.
+
+All three of these metrics compare the *actual* outcomes (here, Amazon Price) with what the model *predicts* the outcome will be. So first, we generate predictions for our dataset, then we use these predictions and the actual values (in `y`) to calculate these three metrics. We'll do this for both the train and the test set.
+
+```{python}
+# predict
+price_pred_train = model.predict(X_train) # make predictions for data in X
+
+# mse and mae
+print("Train MSE: ", mean_squared_error(y_train,price_pred_train))
+print("Train MAE: ", mean_absolute_error(y_train,price_pred_train))
+
+# r2
+print("Train R2 : ", r2_score(y_train,price_pred_train))
+
+# predict
+price_pred_test = model.predict(X_test) # make predictions for data in X
+
+# mse and mae
+print("Test MSE : ", mean_squared_error(y_test,price_pred_test))
+print("Test MAE : ", mean_absolute_error(y_test,price_pred_test))
+
+# r2
+print("Test R2  : ", r2_score(y_test,price_pred_test))
+```
+
+
+
+### K-Fold
+
+**NOTE**: We're building a pretty simple feed forward NN here, once the models get a little bigger, K-Fold can sometimes be too computationally expensive to run.
+
+To use KFold, we need to create a `for` loop which repeats our code `K` times (here, `K` is 5, for 5-Fold CV). The variables `train` and `test` contain the indices of the rows that should be in the train and test sets, respectively. Each time our for loop iterates, we will grab the rows in `X` that should be in the training set and put them in `X_train`, we will grab the rows in `X` that should be in the testing set and put them in `X_test`, we will grab the rows in `y` that should be in the training set and put them in `y_train`, and we will grab the rows in `y` that should be in the testing set and put them in `y_test`.
+
+Then, we'll z-score our inputs. All our predictors except `Hard/ Paper` are continuous, so we'll z-score all of them except `Hard/ Paper`.
+
+#### Model Building and Evaluation 
+Now, we're ready to build the model. First, we create an empty model, and then we fit it. Fitting allows the empty model to use the data we give it (here `X` and `y`) to figure out what the parameters of the model should be. Here the parameters are the intercept and coefficient of the model.
+
+Now that we have a fitted model, we need to check how well it performs. For a continuous outcome, we often check the Mean Squared Error (MSE), Mean Absolute Error (MAE) and R-squared (R2) values. Because we're doing K-Fold CV, we'll have K different MSEs, MAEs, and R2s for the train/test set. So, we store all K of them in lists (`mae_train`, `mae_test`...etc).
+
+All three of these metrics compare the *actual* outcomes (here, Amazon Price) with what the model *predicts* the outcome will be. So first, we generate predictions for our dataset, then we use these predictions and the actual values (in `y`) to calculate these three metrics. We'll do this for both the train and the test set.
+
+
+```{python}
+kf = KFold(5) # 5-Fold CV
+
+mse_train = []
+mse_test  = []
+mae_train = []
+mae_test  = []
+r2_train   = []
+r2_test    = []
+
+continuous =  ["List Price", "NumPages",
+              "Weight (oz)", "Thick",
+              "Height", "Width"] # specify continuous vars
+
+for train,test in kf.split(X):
+    
+    # split into train/test
+    X_train = X.iloc[train]
+    X_test = X.iloc[test]
+    y_train = y[train]
+    y_test = y[test]
+    
+    # z score
+    z = StandardScaler() # create empty z-score object
+
+    z.fit(X_train[continuous]) # all predictors are continuous/interval
+    X_train[continuous] = z.transform(X_train[continuous]) # all predictors are continuous/interval
+    X_test[continuous] = z.transform(X_test[continuous]) # all predictors are continuous/interval
+    
+    #structure of the model
+    model = kb.Sequential([
+        kb.layers.Dense(1, input_shape =[7]), #input
+    ])
+    
+    #how to train the model
+    model.compile(loss = "mean_squared_error",
+                  optimizer = kb.optimizers.SGD())
+    
+    #fit the model (same as SKlearn)
+    model.fit(X_train,y_train, epochs = 5)
+    
+    # predict
+    price_pred_train = model.predict(X_train) # make predictions for data in X_train
+    price_pred_test = model.predict(X_test) # make predictions for data in X_test
+    
+    # mse
+    mse_train.append(mean_squared_error(y_train, price_pred_train))
+    mse_test.append(mean_squared_error(y_test, price_pred_test))
+    
+    # mae
+    mae_train.append(mean_absolute_error(y_train, price_pred_train))
+    mae_test.append(mean_absolute_error(y_test, price_pred_test))
+    
+    #r2
+    r2_train.append(r2_score(y_train, price_pred_train))
+    r2_test.append(r2_score(y_test, price_pred_test))
+
+print("MSE train: ", np.mean(mse_train))
+print("MSE test : ", np.mean(mse_test))   
+
+print("MAE train: ", np.mean(mae_train))
+print("MAE test : ", np.mean(mae_test))   
+
+print("R2 train : ", np.mean(r2_train))
+print("R2 test  : ", np.mean(r2_test))   
+    
+    
+```
+
+:::
+</details>
+
+
+## Classification (Categorical Outcome)
+### Logistic Regression
+### KNN
+### Naive Bayes
+### Decision Trees
+### Random Forest
+### Neural Network
+
+# Unsupervised Machine Learning
+
+## Clustering
+### KMeans
+### Gaussian Mixture Model
+### DBSCAN
+### Hierarchical Agglomerative Clustering
+
+## Dimensionality Reduction
+### PCA
+
+
