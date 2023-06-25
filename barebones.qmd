@@ -3416,9 +3416,566 @@ print("AUC test : ", np.mean(auc_test))
 # Unsupervised Machine Learning
 
 ## Clustering
-### KMeans
-### Gaussian Mixture Model
-### DBSCAN
+In Clustering the general workflow is:
+
+
+- Create `X` (includes pre-processing, etc)
+- Create empty model
+- `.fit()`
+- Grab cluster assignments
+- Evaluate
+
+
+<details>
+<summary>K-Means</summary>
+
+#### Loading and Pre-Processing
+First, we need to import our packages and load in our data.
+
+```{python}
+# doesn't show warnings so that we can have blissful ignorance
+import warnings
+warnings.filterwarnings('ignore')
+
+# base packages
+import pandas as pd
+import numpy as np
+from plotnine import *
+
+# modelling imports
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
+
+from sklearn.metrics import silhouette_samples, silhouette_score
+
+from sklearn.decomposition import PCA
+```
+
+```{python}
+burgers = pd.read_csv("https://raw.githubusercontent.com/cmparlettpelleriti/CPSC392ParlettPelleriti/master/Data/burger-king-items.txt", sep = "\t") #file is tsv not csv, so sep = "\t"
+
+# burgers.head()
+```
+
+Now we want to do any pre-processing we need. Here we’ll check the number of missing values to see if we need to drop any.
+
+```{python}
+# check null
+print(burgers.isnull().sum()) # check if too many are missing
+print(burgers.shape) # how many rows, cols to we have?
+```
+There aren’t many missing values here, compared to the number of rows, so I feel comfortable dropping any row that’s missing a value. So let’s do that.
+
+```{python}
+# drop missing
+burgers = burgers.dropna() # drop missing rows
+burgers = burgers.reset_index() # reset indices
+```
+
+Here we drop missing values, and reset the indices. `dropna()` will by default drop any row that’s missing a value. Say we have 5 rows, and our row indices are 0,1,2,3 and 4. If row 2 has a missing value, `dropna()` will drop it. But now our indices are weird, because it goes 0,1,3,4 instead of 0,1,2,3. `reset_index()` will take our data and make sure there are no skipped indices.
+
+Now we can prepare to build our model by subsetting the data to contain only the variables we want to cluster on.
+
+```{python}
+features = ["Protein(g)", "Fat(g)", "Sat.Fat(g)"] # specify feature vars
+
+X = burgers[features] # features
+```
+
+Then, we'll z-score our inputs. All our inputs should be continuous, since we're using euclidean distance. Because we don't have to worry about a train/test set, we can use `fit_transform()` which does both the fit and the transform step in one.
+
+```{python}
+z = StandardScaler()
+X[features] = z.fit_transform(X[features])
+```
+
+#### Build and Fit the Model
+Now, we’re ready to build the model. First, we create an empty model, and then we fit it. Fitting allows the empty model to use the data we give it (here `X`) to figure out what clusters there are.
+
+If you know how many clusters you want ahead of time, you can fit a single model with that number of clusters. However, often you don't know upfront how many clusters you want. In that case, we can try multiple numbers, and see which one does the "best". Typically we'll look at both the average *silhouette score* as well as the *within cluster variance (SSE)*.
+
+```{python}
+ks = [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+
+sse =  []
+sil = []
+
+for k in ks:
+  km = KMeans(n_clusters = k)
+  km.fit(X[features])
+
+  sse.append(km.inertia_)
+  sil.append(silhouette_score(X[features], km.predict(X[features])))
+
+sse_df = pd.DataFrame({"K": ks,
+                       "sse": sse,
+                       "silhouette": sil})
+
+(ggplot(sse_df, aes(x = "K", y = "sse")) + 
+ geom_line() + geom_point() +
+ theme_minimal() + 
+ labs(title = "SSE for Different Ks"))
+
+```
+
+```{python}
+# sil
+(ggplot(sse_df, aes(x = "K", y = "silhouette")) + 
+ geom_line() + geom_point() +
+ theme_minimal() + 
+ labs(title = "Silhouette for Different Ks"))
+```
+
+#### Evaluate the Model
+The plots above show us the average silhouette scores and the within cluster variance for each `k`, there's not always *one right* answer for what `k` should be, but here we'll choose 5. So let's refit our clustering model with `k = 5`.
+
+```{python}
+km = KMeans(5)
+km.fit(X[features])
+
+assignments = km.predict(X[features])
+X["assignments"] = assignments
+print("Silhouette: ", silhouette_score(X[features], X["assignments"]))
+```
+
+We use the average silhouette score to assess how well the model does (although this is *not* the only metric we can use to do so). We also typically plot the clusters, either using the raw variables, or the first two principal components (see PCA section below).
+
+```{python}
+(ggplot(X, aes(x = "Fat(g)", y = "Protein(g)", color = "assignments")) + geom_point() + theme_minimal() + 
+labs(x = "Fat (in grams)", y = "Protein (in grams)", title = "KMeans Clusters (Fat vs. Protein)"))
+```
+
+```{python}
+(ggplot(X, aes(x = "Sat.Fat(g)", y = "Protein(g)", color = "assignments")) + geom_point() + theme_minimal() + 
+labs(x = "Saturated Fat (in grams)", y = "Protein (in grams)", title = "KMeans Clusters (Saturated Fat vs. Protein)"))
+```
+
+```{python}
+(ggplot(X, aes(x = "Fat(g)", y = "Sat.Fat(g)", color = "assignments")) + geom_point() + theme_minimal() + 
+labs(x = "Fat (in grams)", y = "Saturated Fat (in grams)", title = "KMeans Clusters (Fat vs. Saturated Fat)"))
+```
+
+```{python}
+
+# fit PCA
+pca = PCA()
+X_pca = pca.fit_transform(X[features])
+
+# name the PCs
+pc_names = ["PC" + str(i) for i in range(len(features))]
+
+# grab first two PCs
+X[pc_names] = X_pca
+
+
+# plot
+(ggplot(X, aes(x = "PC1", y = "PC2", color = "assignments")) + geom_point() + theme_minimal() + 
+labs(x = "Principal Component 1", y = "Principal Component 2", title = "KMeans Clusters (First two PCs)"))
+```
+</details>
+
+
+<details>
+<summary>Gaussian Mixture Model</summary>
+
+#### Loading and Pre-Processing
+First, we need to import our packages and load in our data.
+
+```{python}
+# doesn't show warnings so that we can have blissful ignorance
+import warnings
+warnings.filterwarnings('ignore')
+
+# base packages
+import pandas as pd
+import numpy as np
+from plotnine import *
+
+# modelling imports
+from sklearn.preprocessing import StandardScaler
+from sklearn.mixture import GaussianMixture
+
+from sklearn.metrics import silhouette_samples, silhouette_score
+
+from sklearn.decomposition import PCA
+```
+
+```{python}
+burgers = pd.read_csv("https://raw.githubusercontent.com/cmparlettpelleriti/CPSC392ParlettPelleriti/master/Data/burger-king-items.txt", sep = "\t") #file is tsv not csv, so sep = "\t"
+
+# burgers.head()
+```
+
+Now we want to do any pre-processing we need. Here we’ll check the number of missing values to see if we need to drop any.
+
+```{python}
+# check null
+print(burgers.isnull().sum()) # check if too many are missing
+print(burgers.shape) # how many rows, cols to we have?
+```
+There aren’t many missing values here, compared to the number of rows, so I feel comfortable dropping any row that’s missing a value. So let’s do that.
+
+```{python}
+# drop missing
+burgers = burgers.dropna() # drop missing rows
+burgers = burgers.reset_index() # reset indices
+```
+
+Here we drop missing values, and reset the indices. `dropna()` will by default drop any row that’s missing a value. Say we have 5 rows, and our row indices are 0,1,2,3 and 4. If row 2 has a missing value, `dropna()` will drop it. But now our indices are weird, because it goes 0,1,3,4 instead of 0,1,2,3. `reset_index()` will take our data and make sure there are no skipped indices.
+
+Now we can prepare to build our model by subsetting the data to contain only the variables we want to cluster on.
+
+```{python}
+features = ["Protein(g)", "Fat(g)", "Sat.Fat(g)"] # specify feature vars
+
+X = burgers[features] # features
+```
+
+Then, we'll z-score our inputs. All our inputs should be continuous, since we're using euclidean distance. Because we don't have to worry about a train/test set, we can use `fit_transform()` which does both the fit and the transform step in one.
+
+```{python}
+z = StandardScaler()
+X[features] = z.fit_transform(X[features])
+```
+
+#### Build and Fit the Model
+Now, we’re ready to build the model. First, we create an empty model, and then we fit it. Fitting allows the empty model to use the data we give it (here `X`) to figure out what clusters there are.
+
+If you know how many clusters you want ahead of time, you can fit a single model with that number of clusters. However, often you don't know upfront how many clusters you want. In that case, we can try multiple numbers, and see which one does the "best". Typically we'll look at both the average *silhouette score* as well as the *within cluster variance (SSE)*.
+
+```{python}
+ks = [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+
+sil = []
+
+for k in ks:
+  gmm = GaussianMixture(n_components = k)
+  gmm.fit(X[features])
+
+  sil.append(silhouette_score(X[features], gmm.predict(X[features])))
+
+sil_df = pd.DataFrame({"K": ks,
+                       "silhouette": sil})
+
+# sil
+(ggplot(sil_df, aes(x = "K", y = "silhouette")) + 
+ geom_line() + geom_point() +
+ theme_minimal() + 
+ labs(title = "Silhouette for Different Ks"))
+```
+
+#### Evaluate the Model
+The plots above show us the average silhouette scores for each `k`, there's not always *one right* answer for what `k` should be, but here we'll choose 4. So let's refit our clustering model with `k = 4`.
+
+```{python}
+gmm = GaussianMixture(4)
+gmm.fit(X[features])
+
+assignments = gmm.predict(X[features])
+X["assignments"] = assignments
+print("Silhouette: ", silhouette_score(X[features], X["assignments"]))
+```
+
+We use the average silhouette score to assess how well the model does (although this is *not* the only metric we can use to do so). We also typically plot the clusters, either using the raw variables, or the first two principal components (see PCA section below).
+
+```{python}
+(ggplot(X, aes(x = "Fat(g)", y = "Protein(g)", color = "assignments")) + geom_point() + theme_minimal() + 
+labs(x = "Fat (in grams)", y = "Protein (in grams)", title = "KMeans Clusters (Fat vs. Protein)"))
+```
+
+```{python}
+(ggplot(X, aes(x = "Sat.Fat(g)", y = "Protein(g)", color = "assignments")) + geom_point() + theme_minimal() + 
+labs(x = "Saturated Fat (in grams)", y = "Protein (in grams)", title = "KMeans Clusters (Saturated Fat vs. Protein)"))
+```
+
+```{python}
+(ggplot(X, aes(x = "Fat(g)", y = "Sat.Fat(g)", color = "assignments")) + geom_point() + theme_minimal() + 
+labs(x = "Fat (in grams)", y = "Saturated Fat (in grams)", title = "KMeans Clusters (Fat vs. Saturated Fat)"))
+```
+
+```{python}
+
+# fit PCA
+pca = PCA()
+X_pca = pca.fit_transform(X[features])
+
+# name the PCs
+pc_names = ["PC" + str(i) for i in range(len(features))]
+
+# grab first two PCs
+X[pc_names] = X_pca
+
+
+# plot
+(ggplot(X, aes(x = "PC1", y = "PC2", color = "assignments")) + geom_point() + theme_minimal() + 
+labs(x = "Principal Component 1", y = "Principal Component 2", title = "GMM Clusters (First two PCs)"))
+```
+
+</details>
+
+
+<details>
+<summary>DBSCAN</summary>
+
+#### Loading and Pre-Processing
+First, we need to import our packages and load in our data.
+
+```{python}
+# doesn't show warnings so that we can have blissful ignorance
+import warnings
+warnings.filterwarnings('ignore')
+
+# base packages
+import pandas as pd
+import numpy as np
+from plotnine import *
+
+# modelling imports
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import DBSCAN
+from sklearn.neighbors import NearestNeighbors
+
+from sklearn.metrics import silhouette_samples, silhouette_score
+
+from sklearn.decomposition import PCA
+```
+
+```{python}
+burgers = pd.read_csv("https://raw.githubusercontent.com/cmparlettpelleriti/CPSC392ParlettPelleriti/master/Data/burger-king-items.txt", sep = "\t") #file is tsv not csv, so sep = "\t"
+
+# burgers.head()
+```
+
+Now we want to do any pre-processing we need. Here we’ll check the number of missing values to see if we need to drop any.
+
+```{python}
+# check null
+print(burgers.isnull().sum()) # check if too many are missing
+print(burgers.shape) # how many rows, cols to we have?
+```
+
+There aren’t many missing values here, compared to the number of rows, so I feel comfortable dropping any row that’s missing a value. So let’s do that.
+
+```{python}
+# drop missing
+burgers = burgers.dropna() # drop missing rows
+burgers = burgers.reset_index() # reset indices
+```
+
+Here we drop missing values, and reset the indices. `dropna()` will by default drop any row that’s missing a value. Say we have 5 rows, and our row indices are 0,1,2,3 and 4. If row 2 has a missing value, `dropna()` will drop it. But now our indices are weird, because it goes 0,1,3,4 instead of 0,1,2,3. `reset_index()` will take our data and make sure there are no skipped indices.
+
+Now we can prepare to build our model by subsetting the data to contain only the variables we want to cluster on.
+
+```{python}
+features = ["Protein(g)", "Fat(g)", "Sat.Fat(g)"] # specify feature vars
+
+X = burgers[features] # features
+```
+
+Then, we'll z-score our inputs. All our inputs should be continuous, since we're using euclidean distance. Because we don't have to worry about a train/test set, we can use `fit_transform()` which does both the fit and the transform step in one.
+
+```{python}
+z = StandardScaler()
+X[features] = z.fit_transform(X[features])
+```
+
+#### Build and Fit the Model
+Now, we’re ready to build the model. First, we create an empty model, and then we fit it. Fitting allows the empty model to use the data we give it (here `X`) to figure out what clusters there are.
+
+BUR first: DBSCAN requires two hyperparameters, `eps` (the radius of the neighborhood that we consider for each point) and `min_samples` (the threshold for how many neighbors are required for a point to be a *core* point).
+
+We'll choose 3 for `min_samples`, and use the elbow method to choose `eps`.
+
+```{python}
+mins = 3
+nn = NearestNeighbors(n_neighbors = mins + 1)
+
+nn.fit(X[features])
+
+distances, neighbors = nn.kneighbors(X[features])
+
+# sort the distances
+distances = np.sort(distances[:, mins], axis = 0)
+
+#plot the distances
+distances_df = pd.DataFrame({"distances": distances,
+                             "index": list(range(0,len(distances)))})
+(ggplot(distances_df, aes(x = "index", y = "distances")) +
+ geom_line(size = 2) + theme_minimal() +
+ labs(title = "Elbow Method for Choosing eps"))
+```
+
+#### Evaluate the Model
+The plot above shows the elbow graph for eps, based on this graph I'm going to choose 0.75 for `eps`.
+
+```{python}
+db = DBSCAN(eps = 0.75, min_samples = 3)
+assignments = gmm.predict(X[features])
+X["assignments"] = assignments
+print("Silhouette: ", silhouette_score(X[features], X["assignments"]))
+```
+
+We use the average silhouette score to assess how well the model does (although this is *not* the only metric we can use to do so). We also typically plot the clusters, either using the raw variables, or the first two principal components (see PCA section below).
+
+It should be noted that DBSCAN values *density* not *cohesion* so silhoeutte scores can be misleading when assessing DBSCAN.
+
+```{python}
+(ggplot(X, aes(x = "Fat(g)", y = "Protein(g)", color = "assignments")) + geom_point() + theme_minimal() + 
+labs(x = "Fat (in grams)", y = "Protein (in grams)", title = "KMeans Clusters (Fat vs. Protein)"))
+```
+
+```{python}
+(ggplot(X, aes(x = "Sat.Fat(g)", y = "Protein(g)", color = "assignments")) + geom_point() + theme_minimal() + 
+labs(x = "Saturated Fat (in grams)", y = "Protein (in grams)", title = "KMeans Clusters (Saturated Fat vs. Protein)"))
+```
+
+```{python}
+(ggplot(X, aes(x = "Fat(g)", y = "Sat.Fat(g)", color = "assignments")) + geom_point() + theme_minimal() + 
+labs(x = "Fat (in grams)", y = "Saturated Fat (in grams)", title = "KMeans Clusters (Fat vs. Saturated Fat)"))
+```
+
+```{python}
+
+# fit PCA
+pca = PCA()
+X_pca = pca.fit_transform(X[features])
+
+# name the PCs
+pc_names = ["PC" + str(i) for i in range(len(features))]
+
+# grab first two PCs
+X[pc_names] = X_pca
+
+
+# plot
+(ggplot(X, aes(x = "PC1", y = "PC2", color = "assignments")) + geom_point() + theme_minimal() + 
+labs(x = "Principal Component 1", y = "Principal Component 2", title = "DBSCAN Clusters (First two PCs)"))
+```
+</details>
+
+
+<details>
+<summary>Hierarchical Agglomerative Clustering</summary>
+
+#### Loading and Pre-Processing
+First, we need to import our packages and load in our data.
+
+```{python}
+# doesn't show warnings so that we can have blissful ignorance
+import warnings
+warnings.filterwarnings('ignore')
+
+# base packages
+import pandas as pd
+import numpy as np
+from plotnine import *
+
+# modelling imports
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import AgglomerativeClustering
+
+from sklearn.metrics import silhouette_samples, silhouette_score
+
+from sklearn.decomposition import PCA
+
+import scipy.cluster.hierarchy as sch
+from matplotlib import pyplot as plt
+
+```
+
+```{python}
+burgers = pd.read_csv("https://raw.githubusercontent.com/cmparlettpelleriti/CPSC392ParlettPelleriti/master/Data/burger-king-items.txt", sep = "\t") #file is tsv not csv, so sep = "\t"
+
+# burgers.head()
+```
+
+Now we want to do any pre-processing we need. Here we’ll check the number of missing values to see if we need to drop any.
+
+```{python}
+# check null
+print(burgers.isnull().sum()) # check if too many are missing
+print(burgers.shape) # how many rows, cols to we have?
+```
+There aren’t many missing values here, compared to the number of rows, so I feel comfortable dropping any row that’s missing a value. So let’s do that.
+
+```{python}
+# drop missing
+burgers = burgers.dropna() # drop missing rows
+burgers = burgers.reset_index() # reset indices
+```
+
+Here we drop missing values, and reset the indices. `dropna()` will by default drop any row that’s missing a value. Say we have 5 rows, and our row indices are 0,1,2,3 and 4. If row 2 has a missing value, `dropna()` will drop it. But now our indices are weird, because it goes 0,1,3,4 instead of 0,1,2,3. `reset_index()` will take our data and make sure there are no skipped indices.
+
+Now we can prepare to build our model by subsetting the data to contain only the variables we want to cluster on.
+
+```{python}
+features = ["Protein(g)", "Fat(g)", "Sat.Fat(g)"] # specify feature vars
+
+X = burgers[features] # features
+```
+
+Then, we'll z-score our inputs. All our inputs should be continuous, since we're using euclidean distance. Because we don't have to worry about a train/test set, we can use `fit_transform()` which does both the fit and the transform step in one.
+
+```{python}
+z = StandardScaler()
+X[features] = z.fit_transform(X[features])
+```
+
+#### Build and Fit the Model
+Now, we’re ready to build the model. First, we create an empty model, and then we fit it. Fitting allows the empty model to use the data we give it (here `X`) to figure out what clusters there are.
+
+```{python}
+hac = AgglomerativeClustering(n_clusters = 3,
+                             affinity = "euclidean",
+                             linkage = "ward")
+
+hac.fit(X[features])
+```
+
+#### Evaluate the Model
+
+We use the average silhouette score to assess how well the model does (although this is *not* the only metric we can use to do so). We also typically plot the clusters, either using the raw variables, or the first two principal components (see PCA section below).
+
+```{python}
+(ggplot(X, aes(x = "Fat(g)", y = "Protein(g)", color = "assignments")) + geom_point() + theme_minimal() + 
+labs(x = "Fat (in grams)", y = "Protein (in grams)", title = "KMeans Clusters (Fat vs. Protein)"))
+```
+
+```{python}
+(ggplot(X, aes(x = "Sat.Fat(g)", y = "Protein(g)", color = "assignments")) + geom_point() + theme_minimal() + 
+labs(x = "Saturated Fat (in grams)", y = "Protein (in grams)", title = "KMeans Clusters (Saturated Fat vs. Protein)"))
+```
+
+```{python}
+(ggplot(X, aes(x = "Fat(g)", y = "Sat.Fat(g)", color = "assignments")) + geom_point() + theme_minimal() + 
+labs(x = "Fat (in grams)", y = "Saturated Fat (in grams)", title = "KMeans Clusters (Fat vs. Saturated Fat)"))
+```
+
+```{python}
+
+# fit PCA
+pca = PCA()
+X_pca = pca.fit_transform(X[features])
+
+# name the PCs
+pc_names = ["PC" + str(i) for i in range(len(features))]
+
+# grab first two PCs
+X[pc_names] = X_pca
+
+
+# plot
+(ggplot(X, aes(x = "PC1", y = "PC2", color = "assignments")) + geom_point() + theme_minimal() + 
+labs(x = "Principal Component 1", y = "Principal Component 2", title = "GMM Clusters (First two PCs)"))
+```
+
+We also often look at the dendrogram to visually assess the performance of the model.
+
+```{python}
+dendro = sch.dendrogram(sch.linkage(X, method='ward'))
+```
+</details>
+
 ### Hierarchical Agglomerative Clustering
 
 ## Dimensionality Reduction
