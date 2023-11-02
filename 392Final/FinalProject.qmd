@@ -35,7 +35,7 @@ Some places to find data:
 ### Part 2
 ::: {.callout-note collapse="true"}
 ### Part #2 (Individual)
-(**10 points**; PDF) Pretend you're a company who is interested in the dataset you chose. Come up with at **least 7 questions** that you want to answer based on the variables (at the top of this document, **provide a short description of each of the variables in the model**). Use [THIS FORMAT](https://github.com/cmparlettpelleriti/CPSC392ParlettPelleriti/blob/master/ProjectsAndExams/FinalProject/Example%20of%20Questions%20Format.pdf).
+(**10 points**; PDF) Pretend you're a company who is interested in the dataset you chose. Come up with at **least 7 questions** that you want to answer based on the variables (at the top of this document, **provide a short description of each of the variables in the model**). Use [THIS FORMAT](https://github.com/cmparlettpelleriti/CPSC392ParlettPelleriti/blob/master/FinalProject/Example%20of%20Questions%20Format.pdf).
 
 
 These questions can be about the relationships between variables, or how well one thing can predict another, clustering...etc, but note that in your final project you must use at least:
@@ -56,7 +56,7 @@ You will be graded on the quality of the questions. Questions should be interest
 📣 EACH GROUP MEMBER SHOULD TURN IN A COPY OF THIS
 
 
-(**10 points**; PDF) Pretend you're a company who is interested in the dataset you chose. Come up with at **5 questions per person** that you want to answer based on the variables (at the top of this document, **provide a short description of each of the variables in the model**). Use [THIS FORMAT](https://github.com/cmparlettpelleriti/CPSC392ParlettPelleriti/blob/master/ProjectsAndExams/FinalProject/Example%20of%20Questions%20Format.pdf).
+(**10 points**; PDF) Pretend you're a company who is interested in the dataset you chose. Come up with at **5 questions per person** that you want to answer based on the variables (at the top of this document, **provide a short description of each of the variables in the model**). Use [THIS FORMAT](https://github.com/cmparlettpelleriti/CPSC392ParlettPelleriti/blob/master/FinalProject/Example%20of%20Questions%20Format.pdf).
 
 
 These questions can be about the relationships between variables, or how well one thing can predict another, clustering...etc, but note that in your final project you must use at least:
@@ -88,7 +88,7 @@ YOU MUST USE at least:
 
 Each Question needs TWO ggplots to go with it. Please read the instructions for section **5** so you know what your analysis will need to include.
 
-Write up this plan as if you're submitting it to a company to tell them what you're planning to do. CLEARLY mark where each part is and answer each part separately using [THIS FORMAT](https://github.com/cmparlettpelleriti/CPSC392ParlettPelleriti/blob/master/ProjectsAndExams/FinalProject/Example%20of%20Analysis%20Plan%20Format.pdf).
+Write up this plan as if you're submitting it to a company to tell them what you're planning to do. CLEARLY mark where each part is and answer each part separately using [THIS FORMAT](https://github.com/cmparlettpelleriti/CPSC392ParlettPelleriti/blob/master/FinalProject/Example%20of%20Analysis%20Plan%20Format.pdf).
 :::
 
 ::: {.callout-tip collapse="true"}
@@ -108,7 +108,7 @@ YOU MUST USE at least:
 
 Each Question needs TWO ggplots to go with it. Please read the instructions for section **5** so you know what your analysis will need to include.
 
-Write up this plan as if you're submitting it to a company to tell them what you're planning to do. CLEARLY mark where each part is and answer each part separately using [THIS FORMAT](https://github.com/cmparlettpelleriti/CPSC392ParlettPelleriti/blob/master/ProjectsAndExams/FinalProject/Example%20of%20Analysis%20Plan%20Format.pdf).
+Write up this plan as if you're submitting it to a company to tell them what you're planning to do. CLEARLY mark where each part is and answer each part separately using [THIS FORMAT](https://github.com/cmparlettpelleriti/CPSC392ParlettPelleriti/blob/master/FinalProject/Example%20of%20Analysis%20Plan%20Format.pdf).
 
 :::
 
